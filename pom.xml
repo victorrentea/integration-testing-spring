@@ -14,7 +14,7 @@
 
 	<properties>
 		<java.version>11</java.version>
-		<cucumber-java.version>5.0.0</cucumber-java.version>
+		<cucumber-java.version>6.0.0</cucumber-java.version>
 	</properties>
 
 	<dependencies>
@@ -54,35 +54,32 @@
 			<artifactId>wiremock-jre8-standalone</artifactId>
 			<version>2.26.3</version>
 		</dependency>
+
 		<dependency>
-			<groupId>io.cucumber</groupId>
-			<artifactId>cucumber-junit</artifactId>
-			<version>${cucumber-java.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>io.cucumber</groupId>
+			<groupId>info.cukes</groupId>
 			<artifactId>cucumber-java</artifactId>
-			<version>${cucumber-java.version}</version>
+			<version>1.2.4</version>
 		</dependency>
 		<dependency>
-			<groupId>io.cucumber</groupId>
+			<groupId>info.cukes</groupId>
 			<artifactId>cucumber-spring</artifactId>
-			<version>${cucumber-java.version}</version>
+			<version>1.2.4</version>
 		</dependency>
 		<dependency>
-			<groupId>io.cucumber</groupId>
-			<artifactId>cucumber-junit-platform-engine</artifactId>
-			<version>${cucumber-java.version}</version>
+			<groupId>info.cukes</groupId>
+			<artifactId>cucumber-junit</artifactId>
+			<version>1.2.4</version>
 		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 			<exclusions>
-				<exclusion>
+			<!--	<exclusion>
 					<groupId>org.junit.vintage</groupId>
 					<artifactId>junit-vintage-engine</artifactId>
-				</exclusion>
+				</exclusion>-->
 			</exclusions>
 		</dependency>
 	</dependencies>
