@@ -33,8 +33,6 @@ import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-// DONE
-
 
 @Transactional
 @ActiveProfiles("db-mem")
