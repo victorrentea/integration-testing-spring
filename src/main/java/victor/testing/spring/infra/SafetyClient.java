@@ -19,8 +19,6 @@ public class SafetyClient {
     @Value("${safety.service.url.base}")
     private URL baseUrl;
 
-
-    @Cacheable("product-safety") // FIXME
     public boolean isSafe(String upc) {
         var response = rest.getForEntity(
             baseUrl.toString() + "/product/{upc}/safety",
@@ -32,6 +30,7 @@ public class SafetyClient {
     }
 
     private boolean entryIsSafe(SafetyEntryDto report) {
-        return "SAFE".equals(report.getCategory());
+        return "SAF".equals(report.getCategory()); // BUG
+
     }
 }

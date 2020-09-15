@@ -31,10 +31,6 @@ public class SomeSpringApplication implements WebMvcConfigurer {
     public HandlerInterceptor headShotInterceptor() {
         return new CustomHeaderInterceptor();
     }
-    @Bean
-    public Clock clock() {
-        return Clock.systemDefaultZone(); // from: LocalDateTime.now();
-    }
 
     @Autowired
     public void printDatabaseUrl(@Value("${spring.datasource.url}") String dbUrl) {

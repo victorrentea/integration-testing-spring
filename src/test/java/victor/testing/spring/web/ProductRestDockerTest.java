@@ -1,6 +1,5 @@
 package victor.testing.spring.web;
 
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
@@ -16,7 +15,7 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 import victor.testing.spring.domain.ProductCategory;
 import victor.testing.spring.facade.ProductSearchCriteria;
 import victor.testing.spring.facade.ProductSearchResult;
-import victor.testing.spring.facade.WireMockExtension;
+import victor.testing.spring.tools.WireMockExtension;
 import victor.testing.spring.tools.WaitForSpringActuator;
 
 import java.util.List;
