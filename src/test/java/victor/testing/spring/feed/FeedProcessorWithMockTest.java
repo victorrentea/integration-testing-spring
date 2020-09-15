@@ -41,9 +41,5 @@ public class FeedProcessorWithMockTest {
 
    @Test
    public void twoFilesWith3Lines() {
-      when(fileRepoMock.getFileNames()).thenReturn(Arrays.asList("one.txt", "two.txt"));
-      when(fileRepoMock.openFile("one.txt")).thenReturn(Stream.of("one line"));
-      when(fileRepoMock.openFile("two.txt")).thenReturn(Stream.of("one","two"));
-      assertThat(feedProcessor.countPendingLines()).isEqualTo(3);
    }
 }
