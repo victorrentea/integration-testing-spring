@@ -5,12 +5,14 @@
   },
   "response": {
     "status": 200,
-    "jsonBody": [
-      {
-        "category": "DETERMINED",
-        "safeToSell": false
-      }
-    ],
+    "jsonBody": {
+      "entries": [
+        {
+          "category": "DETERMINED",
+          "detailsUrl": "http://wikipedia.com"
+        }
+      ]
+    },
     "headers": {
       "Content-Type": "application/json"
     }

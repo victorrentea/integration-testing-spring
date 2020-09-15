@@ -1,44 +1,38 @@
 package victor.testing.spring.infra;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URL;
-import java.util.List;
+
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class SafetyServiceClient {
 
+    private final RestTemplate rest;
     @Value("${safety.service.url.base}")
     private URL baseUrl;
 
-    @Autowired
-    private RestTemplate rest;
 
     public boolean isSafe(String externalRef) {
-        ResponseEntity<List<SafetyReportDto>> response = rest.exchange(
+        ResponseEntity<String> response = rest.getForEntity(
             baseUrl.toString() + "/product/{externalRef}/safety",
-            HttpMethod.GET, null,
-            new ParameterizedTypeReference<List<SafetyReportDto>>() { },
-            externalRef
-            );
+            String.class, externalRef);
 
-        if (response.getBody() == null) {
-            log.warn("No body received!?");
-            return false;
-        }
-        return response.getBody().stream().allMatch(this::reportIsSafe);
+        System.out.println(">>>>>" + response.getBody());
+
+//        boolean safe = response.getBody().getEntries().stream().anyMatch(this::entryIsSafe);
+//        log.info("Product is safe: " + safe);
+//        return safe;
+        return true;
     }
 
-    private boolean reportIsSafe(SafetyReportDto report) {
-        return report.isSafeToSell() &&
-            report.getCategory().equals("DETERMINED");
-//                                               ^ TYPO HERE
+    private boolean entryIsSafe(SafetyEntryDto report) {
+        return "SAFE".equals(report.getCategory());
     }
 }

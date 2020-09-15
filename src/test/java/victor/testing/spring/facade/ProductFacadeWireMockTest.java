@@ -74,16 +74,15 @@ public class ProductFacadeWireMockTest {
         Product product = new Product()
             .setName("Prod")
             .setExternalRef("SAFE")
-            .setSupplier(new Supplier().setActive(true)); // long-live CascadeType.PERSIST
+            .setSupplier(new Supplier().setActive(true));
         productRepo.save(product);
         currentTime = LocalDateTime.parse("2020-01-01T20:00:00");
 
-        WireMock.stubFor(get(urlEqualTo("/product/SAFE/safety"))
-            .willReturn(aResponse()
-                .withStatus(200)
-                .withHeader("Content-Type", "application/json")
-                .withBody("[{\"category\":\"DETERMINED\", \"safeToSell\":true}]")));
-        //                                          ^ BUG in client!
+//        WireMock.stubFor(get(urlEqualTo("/product/SAFE/safety"))
+//            .willReturn(aResponse()
+//                .withStatus(200)
+//                .withHeader("Content-Type", "application/json")
+//                .withBody("{\"entries\": [{\"category\": \"UNKNOWN\"},{\"category\": \"SAFE\"}]}")));
         ProductDto dto = productFacade.getProduct(product.getId());
 
         assertThat(dto.productName).isEqualTo("Prod");
