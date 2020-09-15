@@ -1,12 +1,9 @@
 package victor.testing.spring.facade;
 
-
-import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,15 +12,12 @@ import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
-import ru.lanwen.wiremock.ext.WiremockResolver;
-import ru.lanwen.wiremock.ext.WiremockResolver.Wiremock;
-import ru.lanwen.wiremock.ext.WiremockUriResolver;
-import ru.lanwen.wiremock.ext.WiremockUriResolver.WiremockUri;
 import victor.testing.spring.domain.Product;
+import victor.testing.spring.domain.ProductCategory;
 import victor.testing.spring.domain.Supplier;
-import victor.testing.spring.facade.ProductFacade;
-import victor.testing.spring.facade.WireMockExtension;
+import victor.testing.spring.infra.SafetyServiceClient;
 import victor.testing.spring.repo.ProductRepo;
+import victor.testing.spring.repo.SupplierRepo;
 import victor.testing.spring.web.ProductDto;
 
 import java.time.Clock;
@@ -31,75 +25,59 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-
-@Transactional
-@ActiveProfiles("db-mem")
 @SpringBootTest(properties = "safety.service.url.base=http://localhost:8089")
+@ActiveProfiles("db-mem")
+@Transactional
 public class ProductFacadeWireMockTest {
-    @Autowired
-    private ProductRepo productRepo;
-    @Autowired
-    private ProductFacade productFacade;
+   @Autowired
+   private ProductRepo productRepo;
+   @Autowired
+   private ProductFacade productFacade;
+   @Autowired
+   private SupplierRepo supplierRepo;
 
-    @MockBean
-    private Clock clock;
+   @RegisterExtension
+   public WireMockExtension wireMock = new WireMockExtension(8089);
 
-    private LocalDateTime currentTime = LocalDateTime.now();
+   @Test
+   public void throwsForUnsafeProduct() {
+      Assertions.assertThrows(IllegalStateException.class, () -> {
+         productFacade.createProduct(new ProductDto("name", "UNSAFE", -1L, ProductCategory.HOME));
+      });
+   }
 
-    @BeforeEach
-    public void setupTime() {
-        when(clock.instant()).thenAnswer(call -> currentTime.toInstant(ZoneId.systemDefault().getRules().getOffset(currentTime)));
-        when(clock.getZone()).thenReturn(ZoneId.systemDefault());
-    }
+   @Test
+   public void fullOk() {
+      Supplier supplier = new Supplier().setActive(true);
+      supplierRepo.save(supplier);
 
-    @RegisterExtension
-    public WireMockExtension extension = new WireMockExtension(8089);
+      productFacade.createProduct(new ProductDto("name", "SAFE", supplier.getId(), ProductCategory.HOME));
 
-    @Test
-    public void throwsWhenNotSafe() {
-        Product product = new Product().setExternalRef("UNSAFE").setSupplier(new Supplier().setActive(true));
+      assertThat(productRepo.findAll()).hasSize(1);
+   }
 
-        productRepo.save(product);
+   @Autowired
+   private CacheManager cacheManager;
 
-        Assertions.assertThrows(IllegalStateException.class,
-            () -> productFacade.getProduct(product.getId()));
-    }
+   @Test
+   public void fullOkHacked() {
+      Supplier supplier = new Supplier().setActive(true);
+      supplierRepo.save(supplier);
 
-    @Test
-    public void success() {
-        Product product = new Product()
-            .setName("Product Name")
-            .setExternalRef("SAFE")
-            .setSupplier(new Supplier().setActive(true));
-        productRepo.save(product);
-        currentTime = LocalDateTime.parse("2020-01-01T20:00:00");
+      cacheManager.getCacheNames().stream().map(cacheManager::getCache).forEach(Cache::clear);
 
-        ProductDto dto = productFacade.getProduct(product.getId());
-
-        assertThat(dto.productName).isEqualTo("Product Name");
-        assertThat(dto.sampleDate).isEqualTo("2020-01-01T19:59:55");
-    }
-
-    @Test
-    public void unsafeOverrideManually() {
-        Product product = new Product().setExternalRef("SAFE");
-        productRepo.save(product);
-
-        WireMock.stubFor(get(urlEqualTo("/product/SAFE/safety"))
-            .willReturn(aResponse()
-                .withStatus(200)
-                .withHeader("Content-Type", "application/json")
-                .withBody("{\"entries\": [{\"category\": \"UNKNOWN\"}]}"))); // override
+      WireMock.stubFor(get(urlEqualTo("/product/SAFE/safety"))
+          .willReturn(aResponse()
+              .withStatus(200)
+              .withHeader("Content-Type", "application/json")
+              .withBody("{\"entries\": [{\"category\": \"UNKNOWN\"}]}"))); // override
 
 
-        Assertions.assertThrows(IllegalStateException.class,
-            () -> productFacade.getProduct(product.getId()));
-
-        // TODO Disable globally in tests spring.cache.type=NONE
-        // TODO Evict on-demand CacheManager.getCache(name).clear()
-    }
+      Assertions.assertThrows(IllegalStateException.class, () -> {
+         productFacade.createProduct(new ProductDto("name", "SAFE", supplier.getId(), ProductCategory.HOME));
+      });
+   }
 }

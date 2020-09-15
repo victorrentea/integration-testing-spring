@@ -1,5 +1,6 @@
 package victor.testing.spring.repo;
 
+import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -15,17 +16,19 @@ import victor.testing.spring.domain.ProductCategory;
 import victor.testing.spring.domain.Supplier;
 import victor.testing.spring.facade.ProductSearchCriteria;
 import victor.testing.spring.facade.ProductSearchResult;
+import wiremock.org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 
 @Slf4j
 @ContextConfiguration(
     classes = SomeSpringApplication.class,
     loader = SpringBootContextLoader.class)
-@ActiveProfiles({"db-mem","test"})
+@ActiveProfiles({"db-mem", "test"})
 public class ProductSearchSteps {
    @Autowired
    private ProductRepo productRepo;
@@ -54,13 +57,11 @@ public class ProductSearchSteps {
 
    @And("^That product has supplier \"([^\"]*)\"$")
    public void thatProductHasSupplier(String supplierName) {
-      product.setSupplier(supplierRepo.findByName(supplierName));
+      if (StringUtils.isNotBlank(supplierName)) {
+         product.setSupplier(supplierRepo.findByName(supplierName));
+      }
    }
 
-   @And("^That product has category \"([^\"]*)\"$")
-   public void thatProductHasCategory(ProductCategory category) {
-      product.setCategory(category);
-   }
 
 
    @When("^The search criteria name is \"([^\"]*)\"$")
@@ -70,12 +71,9 @@ public class ProductSearchSteps {
 
    @And("^The search criteria supplier is \"([^\"]*)\"$")
    public void theSearchCriteriaSupplierIs(String supplierName) {
-      criteria.supplierId = supplierRepo.findByName(supplierName).getId();
-   }
-
-   @And("^The search criteria category is \"([^\"]*)\"$")
-   public void theSearchCriteriaCategoryIs(ProductCategory category) {
-      criteria.category = category;
+      if (StringUtils.isNotBlank(supplierName)) {
+         criteria.supplierId = supplierRepo.findByName(supplierName).getId();
+      }
    }
 
    @Then("^That product is returned by search$")
@@ -91,5 +89,16 @@ public class ProductSearchSteps {
       productRepo.save(product);
       List<ProductSearchResult> results = productRepo.search(criteria);
       assertThat(results).isEmpty();
+   }
+
+   @Then("^That product is returned by search: \"([^\"]*)\"$")
+   public void thatProductIsReturnedBySearch(boolean found) throws Throwable {
+      productRepo.save(product);
+      List<ProductSearchResult> results = productRepo.search(criteria);
+      if (found) {
+         assertThat(results).hasSize(1);
+      } else {
+         assertThat(results).isEmpty();
+      }
    }
 }

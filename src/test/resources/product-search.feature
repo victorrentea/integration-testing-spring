@@ -15,12 +15,14 @@ Feature: Search for product
     When The search criteria name is "namex"
     Then No products are returned by search
 
-  Scenario: Full Match
+  Scenario Outline: Full Match
     Given One product exists
-    And That product has name "name"
-    And That product has supplier "X"
-    And That product has category "ME"
-    When The search criteria name is "name"
-    And The search criteria supplier is "X"
-    And The search criteria category is "ME"
-    Then That product is returned by search
+    And That product has name "<productName>"
+    And That product has supplier "<productSupplier>"
+    When The search criteria name is "<searchName>"
+    And The search criteria supplier is "<searchSupplier>"
+    Then That product is returned by search: "<returned>"
+
+    Examples:
+      | productName | productSupplier | searchName | searchSupplier | returned |
+      | a           |                 | a          |                | true     |
