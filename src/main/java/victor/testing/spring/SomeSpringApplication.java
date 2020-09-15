@@ -38,7 +38,7 @@ public class SomeSpringApplication implements WebMvcConfigurer {
 
     @Autowired
     public void printDatabaseUrl(@Value("${spring.datasource.url}") String dbUrl) {
-        log.info("Using database: " + dbUrl);
+        log.info("Using database: {} <<<", dbUrl);
     }
 
     @Bean
