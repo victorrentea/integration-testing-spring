@@ -1,0 +1,22 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/product/SAFE/safety"
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "entries": [
+        {
+          "category": "UNKNOWN"
+        },
+        {
+          "category": "SAFE"
+        }
+      ]
+    },
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}
