@@ -5,12 +5,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class ProductSearchResult {
-    // Tip: final fields if using JPA
-    public Long id;
-    public String name;
+    private final Long id;
+    private final String name;
 
 
 }

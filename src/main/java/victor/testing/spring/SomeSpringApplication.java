@@ -2,6 +2,7 @@ package victor.testing.spring;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -12,6 +13,7 @@ import victor.testing.spring.web.CustomHeaderInterceptor;
 import java.time.Clock;
 
 //@EnableSwagger2
+@EnableCaching
 @SpringBootApplication
 public class SomeSpringApplication implements WebMvcConfigurer {
     public static void main(String[] args) {

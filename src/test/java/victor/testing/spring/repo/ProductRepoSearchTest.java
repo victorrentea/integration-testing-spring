@@ -1,6 +1,7 @@
 package victor.testing.spring.repo;
 
 import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,8 +13,10 @@ import victor.testing.spring.facade.ProductSearchCriteria;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
-@ActiveProfiles({"db-mem", "test"})
+@SpringBootTest()
+@ActiveProfiles({"db-mysql", "test"})
+@Tag("integration")
+@ContextConfiguration(initializers = WaitForDBInitializer.class)
 public class ProductRepoSearchTest {
     @Autowired
     private ProductRepo repo;

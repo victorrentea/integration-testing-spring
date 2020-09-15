@@ -11,6 +11,8 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import ru.lanwen.wiremock.ext.WiremockResolver;
@@ -54,39 +56,50 @@ public class ProductFacadeWireMockTest {
         when(clock.getZone()).thenReturn(ZoneId.systemDefault());
     }
 
-
     @RegisterExtension
     public WireMockExtension extension = new WireMockExtension(8089);
 
     @Test
     public void throwsWhenNotSafe() {
-        Assertions.assertThrows(IllegalStateException.class, () -> {
-            Product product = new Product().setExternalRef("UNSAFE").setSupplier(new Supplier().setActive(true));
+        Product product = new Product().setExternalRef("UNSAFE").setSupplier(new Supplier().setActive(true));
 
-            productRepo.save(product);
+        productRepo.save(product);
 
-            productFacade.getProduct(product.getId());
-        });
+        Assertions.assertThrows(IllegalStateException.class,
+            () -> productFacade.getProduct(product.getId()));
     }
 
     @Test
     public void success() {
         Product product = new Product()
-            .setName("Prod")
+            .setName("Product Name")
             .setExternalRef("SAFE")
             .setSupplier(new Supplier().setActive(true));
         productRepo.save(product);
         currentTime = LocalDateTime.parse("2020-01-01T20:00:00");
 
-//        WireMock.stubFor(get(urlEqualTo("/product/SAFE/safety"))
-//            .willReturn(aResponse()
-//                .withStatus(200)
-//                .withHeader("Content-Type", "application/json")
-//                .withBody("{\"entries\": [{\"category\": \"UNKNOWN\"},{\"category\": \"SAFE\"}]}")));
         ProductDto dto = productFacade.getProduct(product.getId());
 
-        assertThat(dto.productName).isEqualTo("Prod");
-        System.out.println(dto.sampleDate);
+        assertThat(dto.productName).isEqualTo("Product Name");
         assertThat(dto.sampleDate).isEqualTo("2020-01-01T19:59:55");
+    }
+
+    @Test
+    public void unsafeOverrideManually() {
+        Product product = new Product().setExternalRef("SAFE");
+        productRepo.save(product);
+
+        WireMock.stubFor(get(urlEqualTo("/product/SAFE/safety"))
+            .willReturn(aResponse()
+                .withStatus(200)
+                .withHeader("Content-Type", "application/json")
+                .withBody("{\"entries\": [{\"category\": \"UNKNOWN\"}]}"))); // override
+
+
+        Assertions.assertThrows(IllegalStateException.class,
+            () -> productFacade.getProduct(product.getId()));
+
+        // TODO Disable globally in tests spring.cache.type=NONE
+        // TODO Evict on-demand CacheManager.getCache(name).clear()
     }
 }

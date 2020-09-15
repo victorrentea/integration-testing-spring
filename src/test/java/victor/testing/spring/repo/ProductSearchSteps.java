@@ -83,7 +83,7 @@ public class ProductSearchSteps {
       productRepo.save(product);
       List<ProductSearchResult> results = productRepo.search(criteria);
       assertThat(results).hasSize(1);
-      assertThat(results.get(0).id).isEqualTo(product.getId());
+      assertThat(results.get(0).getId()).isEqualTo(product.getId());
    }
 
    @Then("^No products are returned by search$")

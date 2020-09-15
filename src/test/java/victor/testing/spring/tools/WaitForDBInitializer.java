@@ -17,8 +17,8 @@ public class WaitForDBInitializer implements ApplicationContextInitializer<Confi
    public void initialize(ConfigurableApplicationContext applicationContext) {
       System.out.println("Before Anything " + applicationContext.getEnvironment().getProperty("spring.datasource.url"));
       Awaitility.await()
-          .atLeast(10, TimeUnit.SECONDS)
-          .pollInterval(1, TimeUnit.SECONDS)
+          .atLeast(5, TimeUnit.SECONDS)
+          .pollInterval(3, TimeUnit.SECONDS)
           .atMost(1, TimeUnit.MINUTES)
           .until(() -> canConnectToDB(applicationContext.getEnvironment()));
    }
@@ -32,7 +32,7 @@ public class WaitForDBInitializer implements ApplicationContextInitializer<Confi
              env.getRequiredProperty("spring.datasource.username"),
              env.getRequiredProperty("spring.datasource.password"));
 
-         log.info("Connection Established Successful to {} database", connection.getMetaData().getDatabaseProductName());
+         log.info("Connection Established Successfully to {} database", connection.getMetaData().getDatabaseProductName());
          connection.close();
          return true;
       } catch (Exception e) {
