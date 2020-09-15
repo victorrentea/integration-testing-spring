@@ -20,16 +20,13 @@ public class SafetyServiceClient {
 
 
     public boolean isSafe(String externalRef) {
-        ResponseEntity<String> response = rest.getForEntity(
+        ResponseEntity<SafetyReportDto> response = rest.getForEntity(
             baseUrl.toString() + "/product/{externalRef}/safety",
-            String.class, externalRef);
+            SafetyReportDto.class, externalRef);
 
-        System.out.println(">>>>>" + response.getBody());
-
-//        boolean safe = response.getBody().getEntries().stream().anyMatch(this::entryIsSafe);
-//        log.info("Product is safe: " + safe);
-//        return safe;
-        return true;
+        boolean safe = response.getBody().getEntries().stream().anyMatch(this::entryIsSafe);
+        log.info("Product is safe: " + safe);
+        return safe;
     }
 
     private boolean entryIsSafe(SafetyEntryDto report) {
