@@ -19,7 +19,7 @@ public class FeedProcessor {
    @Autowired
    private FeedScanner scanner;
 
-   public int countPendingLines() throws IOException {
+   public int countPendingLines() {
       Collection<String> names = fileRepo.getFileNames();
       log.debug("Found files: " + names);
       int count = 0;

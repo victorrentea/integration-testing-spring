@@ -12,7 +12,6 @@ import victor.testing.spring.web.CustomHeaderInterceptor;
 
 import java.time.Clock;
 
-//@EnableSwagger2
 @EnableCaching
 @SpringBootApplication
 public class SomeSpringApplication implements WebMvcConfigurer {
