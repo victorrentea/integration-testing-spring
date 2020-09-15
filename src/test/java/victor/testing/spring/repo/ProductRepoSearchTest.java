@@ -9,8 +9,8 @@ import victor.testing.spring.facade.ProductSearchCriteria;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest()
-@ActiveProfiles({"db-mem", "test"})
+@SpringBootTest
+@ActiveProfiles("db-mem")
 public class ProductRepoSearchTest {
     @Autowired
     private ProductRepo repo;
@@ -23,6 +23,10 @@ public class ProductRepoSearchTest {
         assertThat(repo.search(criteria)).hasSize(1);
     }
 
-    // TODO
+    // TODO finish
+
+    // TODO base test class persisting supplier
+
+    // TODO replace with composition
 }
 
