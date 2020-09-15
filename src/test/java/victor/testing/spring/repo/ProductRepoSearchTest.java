@@ -15,8 +15,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest()
 @ActiveProfiles({"db-mem", "test"})
-@Tag("integration")
-@ContextConfiguration(initializers = WaitForDBInitializer.class)
 public class ProductRepoSearchTest {
     @Autowired
     private ProductRepo repo;

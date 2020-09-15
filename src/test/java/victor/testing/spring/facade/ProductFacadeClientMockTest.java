@@ -58,7 +58,7 @@ public class ProductFacadeClientMockTest {
    public void fullOk() {
       Supplier supplier = new Supplier().setActive(true);
       supplierRepo.save(supplier);
-      when(mockSafetyClient.isSafe("upc")).thenReturn(false);
+      when(mockSafetyClient.isSafe("upc")).thenReturn(true);
 
       currentTime = LocalDateTime.parse("2020-01-01T20:00:00");
 
