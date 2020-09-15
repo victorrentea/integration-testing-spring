@@ -15,7 +15,7 @@ public class WaitForDBInitializer implements ApplicationContextInitializer<Confi
 
    @Override
    public void initialize(ConfigurableApplicationContext applicationContext) {
-      System.out.println("Before Anything " + applicationContext.getEnvironment().getProperty("spring.datasource.url"));
+      log.debug("Running Before Spring " + applicationContext.getEnvironment().getProperty("spring.datasource.url"));
       Awaitility.await()
           .atLeast(5, TimeUnit.SECONDS)
           .pollInterval(3, TimeUnit.SECONDS)

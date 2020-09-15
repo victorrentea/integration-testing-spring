@@ -10,12 +10,6 @@ services:
       - MYSQL_DATABASE=dockerdemo
     networks:
       - mysql-net
-    healthcheck:
-      test: "/usr/bin/mysql --user=root --password=ThePassword --execute \"SHOW DATABASES;\""
-      interval: 2s
-      timeout: 20s
-      retries: 10
-
 
 networks:
   mysql-net:
