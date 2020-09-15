@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
@@ -20,7 +21,7 @@ import java.time.Clock;
 @SpringBootApplication
 public class SomeSpringApplication implements WebMvcConfigurer {
     public static void main(String[] args) {
-        SpringApplication.run(SomeSpringApplication.class);
+        new SpringApplicationBuilder().initializers(new WaitForDatabase()).sources(SomeSpringApplication.class).run(args);
     }
 
     public void addInterceptors(InterceptorRegistry registry) {

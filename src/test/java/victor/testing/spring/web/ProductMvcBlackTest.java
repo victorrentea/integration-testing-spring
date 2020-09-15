@@ -1,16 +1,14 @@
 package victor.testing.spring.web;
 
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import victor.testing.spring.domain.Supplier;
-import victor.testing.spring.infra.SafetyServiceClient;
+import victor.testing.spring.infra.SafetyClient;
 import victor.testing.spring.repo.SupplierRepo;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -25,7 +23,7 @@ public class ProductMvcBlackTest {
     @Autowired
     private MockMvc mockMvc;
     @MockBean
-    private SafetyServiceClient safetyClient;
+    private SafetyClient safetyClient;
     @Autowired
     private SupplierRepo supplierRepo;
 

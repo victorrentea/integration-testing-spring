@@ -1,8 +1,7 @@
-package victor.testing.spring.tools;
+package victor.testing.spring;
 
 import lombok.extern.slf4j.Slf4j;
 import org.awaitility.Awaitility;
-import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.Environment;
@@ -18,8 +17,7 @@ public class WaitForDatabase implements ApplicationContextInitializer<Configurab
    public void initialize(ConfigurableApplicationContext applicationContext) {
       log.debug("Running Before Spring " + applicationContext.getEnvironment().getProperty("spring.datasource.url"));
       Awaitility.await()
-          .atLeast(5, TimeUnit.SECONDS)
-          .pollInterval(3, TimeUnit.SECONDS)
+          .pollInterval(2, TimeUnit.SECONDS)
           .atMost(1, TimeUnit.MINUTES)
           .until(() -> canConnectToDB(applicationContext.getEnvironment()));
    }

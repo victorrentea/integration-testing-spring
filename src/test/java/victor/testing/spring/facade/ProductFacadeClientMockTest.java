@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import victor.testing.spring.domain.Product;
 import victor.testing.spring.domain.ProductCategory;
 import victor.testing.spring.domain.Supplier;
-import victor.testing.spring.infra.SafetyServiceClient;
+import victor.testing.spring.infra.SafetyClient;
 import victor.testing.spring.repo.ProductRepo;
 import victor.testing.spring.repo.SupplierRepo;
 import victor.testing.spring.web.ProductDto;
@@ -28,7 +28,7 @@ import static org.mockito.Mockito.when;
 @Transactional
 public class ProductFacadeClientMockTest {
    @MockBean
-   public SafetyServiceClient mockSafetyClient;
+   public SafetyClient mockSafetyClient;
    @Autowired
    private ProductRepo productRepo;
    @Autowired

@@ -13,7 +13,7 @@ import java.net.URL;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class SafetyServiceClient {
+public class SafetyClient {
 
     private final RestTemplate rest;
     @Value("${safety.service.url.base}")

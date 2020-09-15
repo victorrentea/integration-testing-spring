@@ -4,8 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import victor.testing.spring.domain.Product;
-import victor.testing.spring.domain.Supplier;
-import victor.testing.spring.infra.SafetyServiceClient;
+import victor.testing.spring.infra.SafetyClient;
 import victor.testing.spring.repo.ProductRepo;
 import victor.testing.spring.repo.SupplierRepo;
 import victor.testing.spring.web.ProductDto;
@@ -18,13 +17,13 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ProductFacade {
-    private final SafetyServiceClient safetyService;
+    private final SafetyClient safetyClient;
     private final ProductRepo productRepo;
     private final SupplierRepo supplierRepo;
     private final Clock clock;
 
     public long createProduct(ProductDto productDto) {
-        boolean safe = safetyService.isSafe(productDto.upc);
+        boolean safe = safetyClient.isSafe(productDto.upc);
         if (!safe) {
             throw new IllegalStateException("Product is not safe: " + productDto.upc);
         }
