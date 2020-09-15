@@ -33,22 +33,12 @@ public class ProductMvcBlackTest {
         Long supplierId = supplierRepo.save(new Supplier().setActive(true)).getId();
         when(safetyClient.isSafe("UPC")).thenReturn(true);
 
-        // when create
         // language=json
         String createJson = String.format("{\"name\": \"Tree\", \"supplierId\": \"%d\", \"upc\": \"UPC\"}", supplierId);
-        mockMvc.perform(post("/product/create")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(createJson))
-            .andExpect(status().isOk());
 
-        // then search
-        mockMvc.perform(post("/product/search")
-                .content("{}")
-                .contentType(MediaType.APPLICATION_JSON)
-        )
-                .andExpect(status().isOk())
-                .andExpect(header().string("Custom-Header", "true"))
-                .andExpect(jsonPath("$[0].name").value("Tree"));
+        // TODO create via REST CALL
+
+        // TODO search via REST CALL
     }
 
 

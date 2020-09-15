@@ -13,25 +13,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
-@AutoConfigureMockMvc
 public class ProductMvcTest {
-    @Autowired
-    private MockMvc mockMvc;
-    @Autowired
-    private ProductRepo productRepo;
 
     @Test
     public void testSearch() throws Exception {
-        productRepo.save(new Product("Tree"));
-
-        mockMvc.perform(post("/product/search")
-                .content("{}")
-                .contentType(MediaType.APPLICATION_JSON)
-        )
-                .andExpect(status().isOk())
-                .andExpect(header().string("Custom-Header", "true"))
-//                .andExpect(content().string(contains("Tree")))
-                .andExpect(jsonPath("$[0].name").value("Tree"));
+       // TODO
     }
 
 
