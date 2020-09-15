@@ -41,7 +41,7 @@ public class ProductRestTest {
    @Autowired
    private SupplierRepo supplierRepo;
 //    @Autowired
-//    private TestRestTemplate rest; // vs RestTemplate + URL + .withBasicAuth("spring", "secret")
+//    private TestRestTemplate rest; // vs RestTemplate + base URL + .withBasicAuth("spring", "secret")
 
    @Value("http://localhost:${local.server.port}")
    private String baseUri;
@@ -49,17 +49,19 @@ public class ProductRestTest {
    @Test
    public void testSearch() {
       RestTemplate rest = new RestTemplate();
+      rest.setUriTemplateHandler(new DefaultUriBuilderFactory(baseUri));
+
 
       Long supplierId = supplierRepo.save(new Supplier().setActive(true)).getId();
       when(safetyClient.isSafe("UPC")).thenReturn(true);
 
       var productDto = new ProductDto("Tree", "UPC", supplierId, ProductCategory.ME);
-      var createResult = rest.postForEntity(baseUri + "/product/create", productDto, Void.class);
+      var createResult = rest.postForEntity("/product/create", productDto, Void.class);
       assertEquals(HttpStatus.OK, createResult.getStatusCode());
 
       var searchCriteria = new ProductSearchCriteria("Tree", null, null);
       ResponseEntity<List<ProductSearchResult>> searchResponse = rest.exchange(
-          baseUri + "/product/search", HttpMethod.POST,
+          "/product/search", HttpMethod.POST,
           new HttpEntity<>(searchCriteria), new ParameterizedTypeReference<>() {
       });
 
