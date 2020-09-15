@@ -11,7 +11,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import victor.testing.spring.SomeSpringApplication;
 import victor.testing.spring.domain.Product;
-import victor.testing.spring.domain.Product.Category;
+import victor.testing.spring.domain.ProductCategory;
 import victor.testing.spring.domain.Supplier;
 import victor.testing.spring.facade.ProductSearchCriteria;
 import victor.testing.spring.facade.ProductSearchResult;
@@ -58,7 +58,7 @@ public class ProductSearchSteps {
    }
 
    @And("^That product has category \"([^\"]*)\"$")
-   public void thatProductHasCategory(Category category) {
+   public void thatProductHasCategory(ProductCategory category) {
       product.setCategory(category);
    }
 
@@ -74,7 +74,7 @@ public class ProductSearchSteps {
    }
 
    @And("^The search criteria category is \"([^\"]*)\"$")
-   public void theSearchCriteriaCategoryIs(Category category) {
+   public void theSearchCriteriaCategoryIs(ProductCategory category) {
       criteria.category = category;
    }
 

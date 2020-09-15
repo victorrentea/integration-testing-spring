@@ -20,11 +20,11 @@ public class SafetyServiceClient {
     private URL baseUrl;
 
 
-    @Cacheable("product-safety") // FIXME 
-    public boolean isSafe(String externalRef) {
+    @Cacheable("product-safety") // FIXME
+    public boolean isSafe(String upc) {
         ResponseEntity<SafetyReportDto> response = rest.getForEntity(
-            baseUrl.toString() + "/product/{externalRef}/safety",
-            SafetyReportDto.class, externalRef);
+            baseUrl.toString() + "/product/{upc}/safety",
+            SafetyReportDto.class, upc);
 
         boolean safe = response.getBody().getEntries().stream().anyMatch(this::entryIsSafe);
         log.info("Product is safe: " + safe);

@@ -4,39 +4,39 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import victor.testing.spring.domain.Product;
+import victor.testing.spring.domain.Supplier;
 import victor.testing.spring.infra.SafetyServiceClient;
 import victor.testing.spring.repo.ProductRepo;
+import victor.testing.spring.repo.SupplierRepo;
 import victor.testing.spring.web.ProductDto;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static java.time.temporal.ChronoUnit.SECONDS;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class ProductFacade {
-    private final SafetyServiceClient safetyClient;
+    private final SafetyServiceClient safetyService;
     private final ProductRepo productRepo;
+    private final SupplierRepo supplierRepo;
     private final Clock clock;
 
-    public ProductDto getProduct(long productId) {
-        Product product = productRepo.findById(productId)
-            .orElseThrow(() -> new IllegalArgumentException("Product not found: " + productId));
-
-        boolean safe = safetyClient.isSafe(product.getExternalRef());
-
+    public long createProduct(ProductDto productDto) {
+        boolean safe = safetyService.isSafe(productDto.upc);
         if (!safe) {
-            throw new IllegalStateException("Product is not safe: " + productId);
+            throw new IllegalStateException("Product is not safe: " + productDto.upc);
         }
 
-        ProductDto dto = new ProductDto(product);
-        dto.sampleDate = product.getSampleDate()
-            .orElse(LocalDateTime.now(clock).minus(5, SECONDS))
-            .toString();
-        return dto;
+        Product product = new Product();
+        product.setName(productDto.name);
+        product.setCategory(productDto.category);
+        product.setUpc(productDto.upc);
+        product.setSupplier(supplierRepo.getOne(productDto.supplierId));
+        product.setCreateDate(LocalDateTime.now(clock));
+        productRepo.save(product);
+        return product.getId();
     }
 
     public List<ProductSearchResult> searchProduct(ProductSearchCriteria criteria) {

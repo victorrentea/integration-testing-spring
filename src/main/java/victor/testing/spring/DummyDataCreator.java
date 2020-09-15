@@ -8,8 +8,8 @@ import victor.testing.spring.repo.ProductRepo;
 
 import java.util.stream.Stream;
 
-@Component
-@Profile("!test")
+//@Component
+//@Profile("!test")
 public class DummyDataCreator implements CommandLineRunner {
    private final ProductRepo productRepo;
 

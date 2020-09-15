@@ -15,7 +15,7 @@ Feature: Search for product
     When The search criteria name is "namex"
     Then No products are returned by search
 
-  Scenario:
+  Scenario: Full Match
     Given One product exists
     And That product has name "name"
     And That product has supplier "X"
