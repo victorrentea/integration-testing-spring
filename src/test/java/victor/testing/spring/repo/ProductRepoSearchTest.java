@@ -14,7 +14,7 @@ import victor.testing.spring.facade.ProductSearchCriteria;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest()
-@ActiveProfiles({"db-mysql", "test"})
+@ActiveProfiles({"db-mem", "test"})
 @Tag("integration")
 @ContextConfiguration(initializers = WaitForDBInitializer.class)
 public class ProductRepoSearchTest {
