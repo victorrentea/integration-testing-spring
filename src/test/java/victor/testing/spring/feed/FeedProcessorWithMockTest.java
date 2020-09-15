@@ -28,7 +28,7 @@ public class FeedProcessorWithMockTest {
    @Test
    public void oneFileWithOneLine() {
       when(fileRepoMock.getFileNames()).thenReturn(List.of("one.txt"));
-      when(fileRepoMock.openFile("one.txt")).thenReturn(Stream.of("one line"));
+      when(fileRepoMock.openFile("one.txt")).thenReturn(Stream.of("one"));
       assertThat(feedProcessor.countPendingLines()).isEqualTo(1);
    }
 

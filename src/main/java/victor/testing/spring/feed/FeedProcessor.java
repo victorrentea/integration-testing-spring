@@ -25,7 +25,7 @@ public class FeedProcessor {
       for (String fileName : names) {
          try (Stream<String> linesStream = fileRepo.openFile(fileName)) {
             List<String> lines = linesStream.collect(toList());
-            // TODO uncomment scanner.removeComments(lines);
+            // TODO imagine anothed dependency scanner.removeComments(lines);
             log.debug("Found {} lines in {}", lines.size(), fileName);
             count += lines.size();
          }
