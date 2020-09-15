@@ -27,6 +27,11 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.awaitility</groupId>
             <artifactId>awaitility</artifactId>
         </dependency>
@@ -128,6 +133,52 @@
                     </execution>
                 </executions>
             </plugin>
+
+
+            <plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>0.33.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <images>
+                        <image>
+                            <name>docker-demo</name>
+                            <build>
+                                <tags>
+                                    <tag>${project.version}</tag>
+                                </tags>
+                                <dockerFile>Dockerfile</dockerFile>
+                                <assembly>
+                                    <name>/</name>
+                                    <mode>dir</mode>
+                                    <inline>
+                                        <files>
+                                            <file>
+                                                <source>
+                                                    ${project.basedir}/target/integration-testing-spring-${project.version}.jar
+                                                </source>
+                                                <outputDirectory>target/</outputDirectory>
+                                            </file>
+                                        </files>
+                                    </inline>
+                                </assembly>
+                            </build>
+                        </image>
+                    </images>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>docker-build</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>build</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+
             <plugin>
                 <groupId>com.dkanejs.maven.plugins</groupId>
                 <artifactId>docker-compose-maven-plugin</artifactId>
@@ -135,6 +186,7 @@
                 <configuration>
                     <composeFiles>
                         <composeFile>${project.basedir}/src/test/docker/docker-compose.yml</composeFile>
+                        <composeFile>${project.basedir}/src/test/docker/docker-compose.override.yml</composeFile>
                     </composeFiles>
                     <detachedMode>true</detachedMode>
                     <removeImages>true</removeImages>

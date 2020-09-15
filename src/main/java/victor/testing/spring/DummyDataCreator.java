@@ -1,26 +1,35 @@
 package victor.testing.spring;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import victor.testing.spring.domain.Product;
+import victor.testing.spring.domain.Supplier;
 import victor.testing.spring.repo.ProductRepo;
+import victor.testing.spring.repo.SupplierRepo;
 
 import java.util.stream.Stream;
 
-//@Component
-//@Profile("!test")
+@Slf4j
+@Component
+@Profile("!skipDummyData")
+@RequiredArgsConstructor
 public class DummyDataCreator implements CommandLineRunner {
    private final ProductRepo productRepo;
-
-   public DummyDataCreator(ProductRepo productRepo) {
-      this.productRepo = productRepo;
-   }
+   private final JdbcTemplate jdbcTemplate;
 
    @Override
    public void run(String... args) throws Exception {
-      Stream.of("Apple","Pear","Watermelon", "Strawberry")
-          .map(Product::new)
-          .forEach(productRepo::save);
+//      Stream.of("Apple","Pear","Watermelon", "Strawberry")
+//          .map(Product::new)
+//          .forEach(productRepo::save);
+
+      jdbcTemplate.update("INSERT INTO SUPPLIER(ID, NAME, ACTIVE) VALUES (1, 'Dummy', 1)");
+
+      log.info("Inserted dummy data");
+
    }
 }

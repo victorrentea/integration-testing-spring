@@ -1,4 +1,4 @@
-version: '2.1'
+version: '3.8'
 
 services:
   mysql:
@@ -10,6 +10,17 @@ services:
       - MYSQL_DATABASE=dockerdemo
     networks:
       - mysql-net
+
+  docker-demo:
+    environment:
+      - MYSQL_HOST=mysql
+      - JAVA_OPTS=-Dsafety.service.url.base=http://host.docker.internal:8089
+    ports:
+      - 8080:8080
+    networks:
+      - mysql-net
+    depends_on:
+      - mysql
 
 networks:
   mysql-net:

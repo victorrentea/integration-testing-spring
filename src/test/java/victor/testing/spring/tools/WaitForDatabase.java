@@ -2,6 +2,7 @@ package victor.testing.spring.tools;
 
 import lombok.extern.slf4j.Slf4j;
 import org.awaitility.Awaitility;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.Environment;
@@ -11,7 +12,7 @@ import java.sql.DriverManager;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
-public class WaitForDBInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
+public class WaitForDatabase implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
    @Override
    public void initialize(ConfigurableApplicationContext applicationContext) {

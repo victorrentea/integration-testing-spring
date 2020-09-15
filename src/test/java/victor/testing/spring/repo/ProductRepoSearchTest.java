@@ -1,13 +1,9 @@
 package victor.testing.spring.repo;
 
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-import victor.testing.spring.tools.WaitForDBInitializer;
 import victor.testing.spring.domain.Product;
 import victor.testing.spring.facade.ProductSearchCriteria;
 
