@@ -1,5 +1,8 @@
 package victor.testing.spring;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
@@ -12,6 +15,7 @@ import victor.testing.spring.web.CustomHeaderInterceptor;
 
 import java.time.Clock;
 
+@Slf4j
 @EnableCaching
 @SpringBootApplication
 public class SomeSpringApplication implements WebMvcConfigurer {
@@ -29,6 +33,11 @@ public class SomeSpringApplication implements WebMvcConfigurer {
     @Bean
     public Clock clock() {
         return Clock.systemDefaultZone(); // from: LocalDateTime.now();
+    }
+
+    @Autowired
+    public void printDatabaseUrl(@Value("${spring.datasource.url}") String dbUrl) {
+        log.info("Using database: " + dbUrl);
     }
 
     @Bean

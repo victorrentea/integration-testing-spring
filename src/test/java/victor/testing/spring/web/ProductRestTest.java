@@ -67,6 +67,7 @@ public class ProductRestTest {
           });
 
       assertEquals(HttpStatus.OK, searchResponse.getStatusCode());
+      assertThat(searchResponse.getBody()).hasSize(1);
       assertThat(searchResponse.getBody()).allMatch(p -> "Tree".equals(p.getName()));
    }
 

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-@Profile("!skipDummyData")
+@Profile("insertDummyData")
 @RequiredArgsConstructor
 public class DummyDataCreator implements CommandLineRunner {
    private final JdbcTemplate jdbcTemplate;
