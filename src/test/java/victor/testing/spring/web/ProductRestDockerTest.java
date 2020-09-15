@@ -1,6 +1,7 @@
 package victor.testing.spring.web;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 
+@Slf4j
 @Tag("integration")
 public class ProductRestDockerTest {
 
@@ -42,11 +44,13 @@ public class ProductRestDockerTest {
 
    @Test
    public void testSearch() {
-      long supplierId = 1L; // assumed to exist in DB
+      long supplierId = 1L; // assumed to exist in DB - @see victor.testing.spring.DummyDataCreator
+      log.info("Start");
 
       var productDto = new ProductDto("Tree", "SAFE", supplierId, ProductCategory.ME);
       var createResult = rest.postForEntity("/product/create", productDto, Void.class);
       assertEquals(HttpStatus.OK, createResult.getStatusCode());
+      log.info("Created OK");
 
       var searchCriteria = new ProductSearchCriteria("Tree", null, null);
       ResponseEntity<List<ProductSearchResult>> searchResponse = rest.exchange(
@@ -56,6 +60,7 @@ public class ProductRestDockerTest {
 
       assertEquals(HttpStatus.OK, searchResponse.getStatusCode());
       assertThat(searchResponse.getBody()).allMatch(p -> "Tree".equals(p.getName()));
+      log.info("Search OK");
    }
 
 
