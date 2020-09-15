@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
@@ -15,7 +14,7 @@ import static java.util.stream.Collectors.toList;
 @Service
 public class FeedProcessor {
    @Autowired
-   private IFileRepo fileRepo;
+   private FileRepo fileRepo;
    @Autowired
    private FeedScanner scanner;
 
@@ -26,7 +25,7 @@ public class FeedProcessor {
       for (String fileName : names) {
          try (Stream<String> linesStream = fileRepo.openFile(fileName)) {
             List<String> lines = linesStream.collect(toList());
-            scanner.removeComments(lines);
+            // TODO uncomment scanner.removeComments(lines);
             log.debug("Found {} lines in {}", lines.size(), fileName);
             count += lines.size();
          }

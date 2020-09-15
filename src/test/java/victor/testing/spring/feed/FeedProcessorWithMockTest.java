@@ -1,7 +1,10 @@
 package victor.testing.spring.feed;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -14,30 +17,30 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 public class FeedProcessorWithMockTest {
 
-   @Autowired
+   @InjectMocks
    private FeedProcessor feedProcessor;
-   @MockBean
-   private IFileRepo fileRepoMock;
+   @Mock
+   private FileRepo fileRepoMock;
 
    @Test
-   public void oneFileWithOneLine() throws IOException {
+   public void oneFileWithOneLine() {
       when(fileRepoMock.getFileNames()).thenReturn(List.of("one.txt"));
       when(fileRepoMock.openFile("one.txt")).thenReturn(Stream.of("one line"));
       assertThat(feedProcessor.countPendingLines()).isEqualTo(1);
    }
 
    @Test
-   public void oneFileWith2Lines() throws IOException {
+   public void oneFileWith2Lines() {
       when(fileRepoMock.getFileNames()).thenReturn(List.of("two.txt"));
       when(fileRepoMock.openFile("two.txt")).thenReturn(Stream.of("one","two"));
       assertThat(feedProcessor.countPendingLines()).isEqualTo(2);
    }
 
    @Test
-   public void twoFilesWith3Lines() throws IOException {
+   public void twoFilesWith3Lines() {
       when(fileRepoMock.getFileNames()).thenReturn(Arrays.asList("one.txt", "two.txt"));
       when(fileRepoMock.openFile("one.txt")).thenReturn(Stream.of("one line"));
       when(fileRepoMock.openFile("two.txt")).thenReturn(Stream.of("one","two"));
