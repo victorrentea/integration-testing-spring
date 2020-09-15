@@ -43,11 +43,11 @@ public class ProductRestTest {
 //    @Autowired
 //    private TestRestTemplate rest; // vs RestTemplate + URL + .withBasicAuth("spring", "secret")
 
-   @Value("http://localhost:8080")
+   @Value("http://localhost:${local.server.port}")
    private String baseUri;
 
    @Test
-   public void testSearch() throws Exception {
+   public void testSearch() {
       RestTemplate rest = new RestTemplate();
 
       Long supplierId = supplierRepo.save(new Supplier().setActive(true)).getId();
