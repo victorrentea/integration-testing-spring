@@ -1,6 +1,8 @@
 package victor.testing.spring.web;
 
 import org.assertj.core.api.Assertions;
+import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import victor.testing.spring.domain.ProductCategory;
@@ -22,6 +25,7 @@ import victor.testing.spring.domain.Supplier;
 import victor.testing.spring.facade.ProductSearchCriteria;
 import victor.testing.spring.facade.ProductSearchResult;
 import victor.testing.spring.infra.SafetyServiceClient;
+import victor.testing.spring.repo.ProductRepo;
 import victor.testing.spring.repo.SupplierRepo;
 
 import java.net.URI;
@@ -40,15 +44,23 @@ public class ProductRestTest {
    private SafetyServiceClient safetyClient;
    @Autowired
    private SupplierRepo supplierRepo;
-
-//   @Autowired
-//   private TestRestTemplate rest; // vs RestTemplate + base URL + .withBasicAuth("spring", "secret")
-   private RestTemplate rest; // vs RestTemplate + base URL + .withBasicAuth("spring", "secret")
+   @Autowired
+   private ProductRepo productRepo;
 
    @Autowired
-   public void initRestTemplate(@Value("http://localhost:${local.server.port}") String baseUri) {
-      rest = new RestTemplate();
-      rest.setUriTemplateHandler(new DefaultUriBuilderFactory(baseUri));
+   private TestRestTemplate rest; // vs RestTemplate + base URL + .withBasicAuth("spring", "secret")
+//   private RestTemplate rest;
+
+//   @Autowired
+//   public void initRestTemplate(@Value("http://localhost:${local.server.port}") String baseUri) {
+//      rest = new RestTemplate();
+//      rest.setUriTemplateHandler(new DefaultUriBuilderFactory(baseUri));
+//   }
+
+   @BeforeEach
+   public void initialize() {
+      productRepo.deleteAll();
+      supplierRepo.deleteAll();
    }
 
    @Test
