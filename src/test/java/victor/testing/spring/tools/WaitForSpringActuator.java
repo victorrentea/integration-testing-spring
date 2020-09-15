@@ -6,7 +6,12 @@ import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.net.http.HttpResponse.BodyHandlers;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -25,14 +30,14 @@ public class WaitForSpringActuator implements BeforeAllCallback {
         log.info("{} is UP", baseUrl);
     }
 
-    public boolean isApplicationUp(String urlString) {
+    public static boolean isApplicationUp(String urlString) {
         try {
-            log.debug("Test {}", baseUrl);
-            URL url = new URL(urlString);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
-            connection.connect();
-            return connection.getResponseCode() == 200;
+            log.debug("Ping {}", urlString);
+
+            var response = HttpClient.newHttpClient()
+                .send(HttpRequest.newBuilder().GET().uri(URI.create(urlString)).build(), BodyHandlers.ofString());
+
+            return response.statusCode() == 200;
         } catch (Exception ex) {
             // ignore
             return false;
