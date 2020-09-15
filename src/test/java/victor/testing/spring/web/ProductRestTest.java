@@ -40,18 +40,19 @@ public class ProductRestTest {
    private SafetyServiceClient safetyClient;
    @Autowired
    private SupplierRepo supplierRepo;
-//    @Autowired
-//    private TestRestTemplate rest; // vs RestTemplate + base URL + .withBasicAuth("spring", "secret")
 
-   @Value("http://localhost:${local.server.port}")
-   private String baseUri;
+//   @Autowired
+//   private TestRestTemplate rest; // vs RestTemplate + base URL + .withBasicAuth("spring", "secret")
+   private RestTemplate rest; // vs RestTemplate + base URL + .withBasicAuth("spring", "secret")
+
+   @Autowired
+   public void initRestTemplate(@Value("http://localhost:${local.server.port}") String baseUri) {
+      rest = new RestTemplate();
+      rest.setUriTemplateHandler(new DefaultUriBuilderFactory(baseUri));
+   }
 
    @Test
    public void testSearch() {
-      RestTemplate rest = new RestTemplate();
-      rest.setUriTemplateHandler(new DefaultUriBuilderFactory(baseUri));
-
-
       Long supplierId = supplierRepo.save(new Supplier().setActive(true)).getId();
       when(safetyClient.isSafe("UPC")).thenReturn(true);
 
@@ -63,7 +64,7 @@ public class ProductRestTest {
       ResponseEntity<List<ProductSearchResult>> searchResponse = rest.exchange(
           "/product/search", HttpMethod.POST,
           new HttpEntity<>(searchCriteria), new ParameterizedTypeReference<>() {
-      });
+          });
 
       assertEquals(HttpStatus.OK, searchResponse.getStatusCode());
       assertThat(searchResponse.getBody()).allMatch(p -> "Tree".equals(p.getName()));
