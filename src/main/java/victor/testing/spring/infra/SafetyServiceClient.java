@@ -22,7 +22,7 @@ public class SafetyServiceClient {
 
     @Cacheable("product-safety") // FIXME
     public boolean isSafe(String upc) {
-        ResponseEntity<SafetyReportDto> response = rest.getForEntity(
+        var response = rest.getForEntity(
             baseUrl.toString() + "/product/{upc}/safety",
             SafetyReportDto.class, upc);
 
