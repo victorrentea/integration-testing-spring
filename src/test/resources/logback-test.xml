@@ -1,3 +1,4 @@
+<!-- This file is used only when running non-spring tests using WireMock -->
 <configuration>
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <layout class="ch.qos.logback.classic.PatternLayout">
