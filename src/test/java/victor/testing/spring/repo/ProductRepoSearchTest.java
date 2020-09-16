@@ -1,5 +1,6 @@
 package victor.testing.spring.repo;
 
+import com.github.tomakehurst.wiremock.core.MappingsSaver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import victor.testing.spring.domain.Product;
+import victor.testing.spring.domain.Supplier;
 import victor.testing.spring.facade.ProductSearchCriteria;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -19,6 +21,9 @@ public class ProductRepoSearchTest {
     private ProductRepo repo;
 
     private ProductSearchCriteria criteria = new ProductSearchCriteria();
+    @Autowired
+    private SupplierRepo supplierRepo;
+    private Supplier supplier;
 
     public ProductRepoSearchTest() {
         System.out.println("New test class instance");
@@ -39,6 +44,26 @@ public class ProductRepoSearchTest {
     public void byNameNoMatch() {
         criteria.name = "nameXX";
         repo.save(new Product().setName("name"));
+        assertThat(repo.search(criteria)).isEmpty();
+    }
+
+
+    @BeforeEach
+    public void persistSupplier() {
+        supplier = new Supplier();
+        supplierRepo.save(supplier); // after this line, the supplier instance has ID
+
+    }
+    @Test
+    public void bySupplierMatch() {
+        repo.save(new Product().setSupplier(supplier));
+        criteria.supplierId = supplier.getId();
+        assertThat(repo.search(criteria)).hasSize(1);
+    }
+    @Test
+    public void bySupplierNoMatch() {
+        repo.save(new Product().setSupplier(supplier));
+        criteria.supplierId = -1L;
         assertThat(repo.search(criteria)).isEmpty();
     }
 
