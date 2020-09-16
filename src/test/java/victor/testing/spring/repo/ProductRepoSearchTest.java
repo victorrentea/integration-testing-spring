@@ -3,6 +3,7 @@ package victor.testing.spring.repo;
 import com.github.tomakehurst.wiremock.core.MappingsSaver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -16,11 +17,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Transactional
 @SpringBootTest
 @ActiveProfiles("db-mem")
-public class ProductRepoSearchTest  extends  TestBaseRepo{
+public class ProductRepoSearchTest {
     @Autowired
     private ProductRepo repo;
 
     private ProductSearchCriteria criteria = new ProductSearchCriteria();
+
+    @RegisterExtension
+    public CommonDataExtension commonData = new CommonDataExtension();
 
     public ProductRepoSearchTest() {
         System.out.println("New test class instance");
@@ -46,13 +50,14 @@ public class ProductRepoSearchTest  extends  TestBaseRepo{
 
     @Test
     public void bySupplierMatch() {
-        repo.save(new Product().setSupplier(supplier));
-        criteria.supplierId = supplier.getId();
+        repo.save(new Product().setSupplier(commonData.getSupplier()));
+        criteria.supplierId = commonData.getSupplier().getId();
         assertThat(repo.search(criteria)).hasSize(1);
     }
+
     @Test
     public void bySupplierNoMatch() {
-        repo.save(new Product().setSupplier(supplier));
+        repo.save(new Product().setSupplier(commonData.getSupplier()));
         criteria.supplierId = -1L;
         assertThat(repo.search(criteria)).isEmpty();
     }
