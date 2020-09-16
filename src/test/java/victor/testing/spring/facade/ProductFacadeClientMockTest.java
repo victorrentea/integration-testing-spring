@@ -30,12 +30,13 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
+@ActiveProfiles("db-mem")
 public class ProductFacadeClientMockTest {
    @MockBean
    public SafetyClient mockSafetyClient;
-   @MockBean
+   @Autowired
    private ProductRepo productRepo;
-   @MockBean
+   @Autowired
    private SupplierRepo supplierRepo;
    @Autowired
    private ProductFacade productFacade;
@@ -50,21 +51,17 @@ public class ProductFacadeClientMockTest {
 
    @Test
    public void fullOk() {
-      Supplier supplier = new Supplier();
-      long supplierId = 13L;
-      when(supplierRepo.getOne(supplierId)).thenReturn(supplier);
+      long supplierId = supplierRepo.save(new Supplier()).getId();
       when(mockSafetyClient.isSafe("upc")).thenReturn(true);
 
-      productFacade.createProduct(new ProductDto("name", "upc", 13L, ProductCategory.HOME));
+      ProductDto dto = new ProductDto("name", "upc", supplierId, ProductCategory.HOME);
+      productFacade.createProduct(dto);
 
-      // Yuck!
-      ArgumentCaptor<Product> productCaptor = ArgumentCaptor.forClass(Product.class);
-      verify(productRepo).save(productCaptor.capture());
-      Product product = productCaptor.getValue();
+      Product product = productRepo.findAll().get(0);
 
       assertThat(product.getName()).isEqualTo("name");
       assertThat(product.getUpc()).isEqualTo("upc");
-      assertThat(product.getSupplier()).isEqualTo(supplier);
+      assertThat(product.getSupplier().getId()).isEqualTo(supplierId);
       assertThat(product.getCategory()).isEqualTo(ProductCategory.HOME);
       assertThat(product.getCreateDate()).isNotNull();
    }
