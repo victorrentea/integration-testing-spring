@@ -18,11 +18,16 @@ Feature: Search for product
   Scenario Outline: Full Match
     Given One product exists
     And That product has name "<productName>"
+    And That product has category "<productCategory>"
     And That product has supplier "<productSupplier>"
     When The search criteria name is "<searchName>"
     And The search criteria supplier is "<searchSupplier>"
+    And The search criteria category is "<searchCategory>"
     Then That product is returned by search: "<returned>"
 
     Examples:
-      | productName | productSupplier | searchName | searchSupplier | returned |
-      | a           |                 | a          |                | true     |
+      | productName | productCategory | productSupplier | searchName | searchCategory | searchSupplier | returned |
+      | a           | KIDS            |                 | a          | ME             |                | false     |
+      | a           | KIDS            |                 | a          | KIDS           |                | true     |
+      | aX          |                 |                 | a          |                |                | true     |
+      | aX          |                 |                 | aY         |                |                | false    |

@@ -101,4 +101,14 @@ public class ProductSearchSteps {
          assertThat(results).isEmpty();
       }
    }
+
+   @And("^That product has category \"([^\"]*)\"$")
+   public void thatProductHasCategory(ProductCategory category) throws Throwable {
+      product.setCategory(category);
+   }
+
+   @And("^The search criteria category is \"([^\"]*)\"$")
+   public void theSearchCriteriaCategoryIs(ProductCategory category) throws Throwable {
+      criteria.category = category;
+   }
 }
