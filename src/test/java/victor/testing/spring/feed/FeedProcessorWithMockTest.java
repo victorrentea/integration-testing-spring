@@ -2,8 +2,11 @@ package victor.testing.spring.feed;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.MockitoRule;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,6 +20,7 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
+//@RunWith(MockitoJUnitRunner.class)
 @ExtendWith(MockitoExtension.class)
 public class FeedProcessorWithMockTest {
 
@@ -41,7 +45,10 @@ public class FeedProcessorWithMockTest {
 
    @Test
    public void twoFilesWith3Lines() {
-      // TODO
+      when(fileRepoMock.getFileNames()).thenReturn(List.of("one.txt","two.txt"));
+      when(fileRepoMock.openFile("one.txt")).thenReturn(Stream.of("one"));
+      when(fileRepoMock.openFile("two.txt")).thenReturn(Stream.of("one","two"));
+      assertThat(feedProcessor.countPendingLines()).isEqualTo(3);
    }
 
    // TODO IMAGINE EXTRA DEPENDENCY
