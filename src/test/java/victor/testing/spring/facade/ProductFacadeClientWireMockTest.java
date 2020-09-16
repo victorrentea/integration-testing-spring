@@ -1,7 +1,9 @@
 package victor.testing.spring.facade;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import lombok.SneakyThrows;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -17,7 +19,11 @@ import victor.testing.spring.repo.ProductRepo;
 import victor.testing.spring.repo.SupplierRepo;
 import victor.testing.spring.tools.WireMockExtension;
 import victor.testing.spring.web.ProductDto;
+import wiremock.org.apache.commons.io.IOUtils;
 
+import java.io.FileReader;
+
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
@@ -39,15 +45,45 @@ public class ProductFacadeClientWireMockTest {
    @Test
    public void throwsForUnsafeProduct() {
       Assertions.assertThrows(IllegalStateException.class, () -> {
-//         when(mockSafetyClient.isSafe("upc")).thenReturn(false);
          productFacade.createProduct(new ProductDto("name", "UNSAFE",-1L, ProductCategory.HOME));
+      });
+   }
+   @Test
+   public void throwsForUnsafeProductProgrammaticWireMock() {
+      Assertions.assertThrows(IllegalStateException.class, () -> {
+         WireMock.stubFor(get(urlEqualTo("/product/customXX/safety"))
+             .willReturn(aResponse()
+                 .withStatus(200)
+                 .withHeader("Content-Type", "application/json")
+                 .withBody("{\"entries\": [{\"category\": \"DETERMINED\",\"detailsUrl\": \"http://wikipedia.com\"}]}"))); // override
+
+
+         productFacade.createProduct(new ProductDto("name", "customXX",-1L, ProductCategory.HOME));
+      });
+   }
+   @Test
+   @SneakyThrows
+   public void throwsForUnsafeProductProgrammaticWireMockFromFileTemplatized() {
+      Assertions.assertThrows(IllegalStateException.class, () -> {
+         String template;
+         try (FileReader reader = new FileReader("C:\\workspace\\integration-testing-spring\\src\\test\\java\\victor\\testing\\spring\\facade\\inTemplate.json")) {
+            template = IOUtils.toString(reader);
+         }
+         template.replace("{{}}", "DYNAMIC STUFF");
+         WireMock.stubFor(get(urlEqualTo("/product/customXX/safety"))
+             .willReturn(aResponse()
+                 .withStatus(200)
+                 .withHeader("Content-Type", "application/json")
+                 .withBody(  template ))); // override
+
+
+         productFacade.createProduct(new ProductDto("name", "customXX",-1L, ProductCategory.HOME));
       });
    }
 
    @Test
    public void fullOk() {
       long supplierId = supplierRepo.save(new Supplier()).getId();
-//      when(mockSafetyClient.isSafe("upc")).thenReturn(true);
 
       ProductDto dto = new ProductDto("name", "SAFE", supplierId, ProductCategory.HOME);
       productFacade.createProduct(dto);
