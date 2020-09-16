@@ -16,7 +16,7 @@ import static org.mockito.ArgumentMatchers.contains;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-//@Transactional
+@Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("db-mem")
