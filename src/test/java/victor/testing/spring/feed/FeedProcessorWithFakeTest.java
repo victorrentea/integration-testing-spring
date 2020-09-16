@@ -5,6 +5,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
+import org.springframework.test.annotation.DirtiesContext.MethodMode;
 import victor.testing.spring.tools.MeasureTotalTestTimeListener.MeasureRealTime;
 
 import java.util.List;
@@ -15,6 +18,7 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @MeasureRealTime
+@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 public class FeedProcessorWithFakeTest {
 
    @Autowired
@@ -22,10 +26,10 @@ public class FeedProcessorWithFakeTest {
    @Autowired
    private FileRepoFake fileRepoFake;
 
-   @BeforeEach
-   public void cleanup() {
-      fileRepoFake.clearFiles();
-   }
+//   @BeforeEach
+//   public void cleanup() {
+//      fileRepoFake.clearFiles();
+//   }
 
    @Test
    public void oneFileWithOneLine() {
