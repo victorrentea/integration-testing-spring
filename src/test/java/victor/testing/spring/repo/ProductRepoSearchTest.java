@@ -16,14 +16,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Transactional
 @SpringBootTest
 @ActiveProfiles("db-mem")
-public class ProductRepoSearchTest {
+public class ProductRepoSearchTest  extends  TestBaseRepo{
     @Autowired
     private ProductRepo repo;
 
     private ProductSearchCriteria criteria = new ProductSearchCriteria();
-    @Autowired
-    private SupplierRepo supplierRepo;
-    private Supplier supplier;
 
     public ProductRepoSearchTest() {
         System.out.println("New test class instance");
@@ -47,13 +44,6 @@ public class ProductRepoSearchTest {
         assertThat(repo.search(criteria)).isEmpty();
     }
 
-
-    @BeforeEach
-    public void persistSupplier() {
-        supplier = new Supplier();
-        supplierRepo.save(supplier); // after this line, the supplier instance has ID
-
-    }
     @Test
     public void bySupplierMatch() {
         repo.save(new Product().setSupplier(supplier));
