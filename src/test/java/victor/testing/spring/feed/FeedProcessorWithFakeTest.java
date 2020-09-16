@@ -18,7 +18,6 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @MeasureRealTime
-@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 public class FeedProcessorWithFakeTest {
 
    @Autowired
@@ -38,6 +37,7 @@ public class FeedProcessorWithFakeTest {
    }
 
    @Test
+   @DirtiesContext(methodMode = MethodMode.BEFORE_METHOD)
    public void oneFileWith2Lines() {
       fileRepoFake.addFile("two.txt", List.of("one","two"));
       assertThat(feedProcessor.countPendingLines()).isEqualTo(2);
