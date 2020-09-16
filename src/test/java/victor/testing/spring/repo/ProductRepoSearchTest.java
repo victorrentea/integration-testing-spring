@@ -2,6 +2,7 @@ package victor.testing.spring.repo;
 
 import com.github.tomakehurst.wiremock.core.MappingsSaver;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Transactional
 @SpringBootTest
-@ActiveProfiles("db-mem")
+@ActiveProfiles("db-mysql")
+@Tag("integration")
 public class ProductRepoSearchTest {
     @Autowired
     private ProductRepo repo;
