@@ -19,6 +19,7 @@ public class SafetyClient {
     @Value("${safety.service.url.base}")
     private URL baseUrl;
 
+    @Cacheable("safety-cache")
     public boolean isSafe(String upc) {
         var response = rest.getForEntity(
             baseUrl.toString() + "/product/{upc}/safety",

@@ -5,12 +5,15 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.test.context.ActiveProfiles;
@@ -48,13 +51,22 @@ public class ProductFacadeClientWireMockTest {
 
    @RegisterExtension
    public WireMockExtension wireMock = new WireMockExtension(8089);
+   @Autowired
+   private CacheManager cacheManager;
+
+   @BeforeEach
+   public void initialize() {
+      // Clear manually all caches
+      cacheManager.getCacheNames().stream().map(cacheManager::getCache).forEach(Cache::clear);
+   }
 
    @Test
    public void throwsForUnsafeProduct() {
       Assertions.assertThrows(IllegalStateException.class, () -> {
-         productFacade.createProduct(new ProductDto("name", "UNSAFE",-1L, ProductCategory.HOME));
+         productFacade.createProduct(new ProductDto("name", "UNSAFE", -1L, ProductCategory.HOME));
       });
    }
+
    @Test
    public void throwsForUnsafeProductProgrammaticWireMock() {
       Assertions.assertThrows(IllegalStateException.class, () -> {
@@ -65,9 +77,10 @@ public class ProductFacadeClientWireMockTest {
                  .withBody("{\"entries\": [{\"category\": \"DETERMINED\",\"detailsUrl\": \"http://wikipedia.com\"}]}"))); // override
 
 
-         productFacade.createProduct(new ProductDto("name", "customXX",-1L, ProductCategory.HOME));
+         productFacade.createProduct(new ProductDto("name", "customXX", -1L, ProductCategory.HOME));
       });
    }
+
    @Test
    @SneakyThrows
    public void throwsForUnsafeProductProgrammaticWireMockFromFileTemplatized() {
@@ -81,10 +94,10 @@ public class ProductFacadeClientWireMockTest {
              .willReturn(aResponse()
                  .withStatus(200)
                  .withHeader("Content-Type", "application/json")
-                 .withBody(  template ))); // override
+                 .withBody(template))); // override
 
 
-         productFacade.createProduct(new ProductDto("name", "customXX",-1L, ProductCategory.HOME));
+         productFacade.createProduct(new ProductDto("name", "customXX", -1L, ProductCategory.HOME));
       });
    }
 
@@ -113,7 +126,6 @@ public class ProductFacadeClientWireMockTest {
          return Clock.fixed(Instant.parse("2014-12-22T10:15:30.00Z"), ZoneId.systemDefault());
       }
    }
-
 
 
    // TODO Fixed Time
