@@ -20,22 +20,28 @@ public class ProductRepoSearchTest {
 
     private ProductSearchCriteria criteria = new ProductSearchCriteria();
 
-    @BeforeEach
-    public void initialize() {
-        repo.save(new Product());
-
+    public ProductRepoSearchTest() {
+        System.out.println("New test class instance");
     }
     @Test
     public void noCriteria() {
-        assertThat(repo.search(criteria)).hasSize(1);
-    }
-    @Test
-    public void noCriteri2a() {
-//        repo.save(new Product());
+        repo.save(new Product());
         assertThat(repo.search(criteria)).hasSize(1);
     }
 
-    // TODO finish
+    @Test
+    public void byNameMatch() {
+        criteria.name = "Am";
+        repo.save(new Product().setName("naMe"));
+        assertThat(repo.search(criteria)).hasSize(1);
+    }
+    @Test
+    public void byNameNoMatch() {
+        criteria.name = "nameXX";
+        repo.save(new Product().setName("name"));
+        assertThat(repo.search(criteria)).isEmpty();
+    }
+
 
     // TODO base test class persisting supplier
 
