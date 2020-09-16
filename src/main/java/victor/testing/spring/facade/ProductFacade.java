@@ -20,6 +20,7 @@ public class ProductFacade {
     private final SafetyClient safetyClient;
     private final ProductRepo productRepo;
     private final SupplierRepo supplierRepo;
+    private final Clock clock;
 
     public long createProduct(ProductDto productDto) {
         boolean safe = safetyClient.isSafe(productDto.upc);
@@ -32,7 +33,7 @@ public class ProductFacade {
         product.setCategory(productDto.category);
         product.setUpc(productDto.upc);
         product.setSupplier(supplierRepo.getOne(productDto.supplierId));
-        product.setCreateDate(LocalDateTime.now());
+        product.setCreateDate(LocalDateTime.now(clock));
         productRepo.save(product);
         return product.getId();
     }

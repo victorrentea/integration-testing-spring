@@ -38,6 +38,10 @@ public class SomeSpringApplication implements WebMvcConfigurer {
     }
 
     @Bean
+    public Clock clock() {
+        return Clock.systemDefaultZone();
+    }
+    @Bean
     public RestTemplate rest() {
         return new RestTemplate();
     }

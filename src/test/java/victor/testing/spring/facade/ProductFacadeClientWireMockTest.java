@@ -9,7 +9,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 import org.springframework.test.context.ActiveProfiles;
 import victor.testing.spring.domain.Product;
 import victor.testing.spring.domain.ProductCategory;
@@ -22,6 +25,10 @@ import victor.testing.spring.web.ProductDto;
 import wiremock.org.apache.commons.io.IOUtils;
 
 import java.io.FileReader;
+import java.time.Clock;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -89,13 +96,24 @@ public class ProductFacadeClientWireMockTest {
       productFacade.createProduct(dto);
 
       Product product = productRepo.findAll().get(0);
+      LocalDateTime today = LocalDateTime.parse("2014-12-22T10:15:30.00");
 
       assertThat(product.getName()).isEqualTo("name");
       assertThat(product.getUpc()).isEqualTo("SAFE");
       assertThat(product.getSupplier().getId()).isEqualTo(supplierId);
       assertThat(product.getCategory()).isEqualTo(ProductCategory.HOME);
-      assertThat(product.getCreateDate()).isNotNull();
+      assertThat(product.getCreateDate()).isEqualTo(today);
    }
+
+   @TestConfiguration
+   public static class TestConfig {
+      @Bean
+      @Primary
+      public Clock clockFixed() {
+         return Clock.fixed(Instant.parse("2014-12-22T10:15:30.00Z"), ZoneId.systemDefault());
+      }
+   }
+
 
 
    // TODO Fixed Time
