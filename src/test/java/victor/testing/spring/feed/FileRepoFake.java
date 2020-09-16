@@ -1,6 +1,7 @@
 package victor.testing.spring.feed;
 
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -12,6 +13,7 @@ import java.util.stream.Stream;
 
 @Component
 @Primary
+@Profile("fakeFileRepo")
 public class FileRepoFake implements IFileRepo {
    private final Map<String, List<String>> files = new HashMap<>();
 

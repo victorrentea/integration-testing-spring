@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.annotation.DirtiesContext.MethodMode;
+import org.springframework.test.context.ActiveProfiles;
 import victor.testing.spring.tools.MeasureTotalTestTimeListener.MeasureRealTime;
 
 import java.util.List;
@@ -18,6 +19,7 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @MeasureRealTime
+@ActiveProfiles({"fakeFileRepo"})
 public class FeedProcessorWithFakeTest {
 
    @Autowired
