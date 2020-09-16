@@ -1,9 +1,10 @@
 package victor.testing.spring.feed;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import victor.testing.spring.tools.MeasureTotalTestTimeListener.MeasureRealTime;
 
 import java.util.List;
@@ -14,42 +15,40 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @MeasureRealTime
-public class FeedProcessorWithMockTest {
+public class FeedProcessorWithFakeTest {
 
    @Autowired
    private FeedProcessor feedProcessor;
-   @MockBean
-   private IFileRepo fileRepoMock;
+   @Autowired
+   private FileRepoFake fileRepoFake;
 
+   @BeforeEach
+   public void cleanup() {
+      fileRepoFake.clearFiles();
+   }
 
    @Test
    public void oneFileWithOneLine() {
-      when(fileRepoMock.getFileNames()).thenReturn(List.of("one.txt"));
-      when(fileRepoMock.openFile("one.txt")).thenReturn(Stream.of("one"));
+      fileRepoFake.addFile("one.txt", List.of("one.txt"));
       assertThat(feedProcessor.countPendingLines()).isEqualTo(1);
    }
 
    @Test
    public void oneFileWith2Lines() {
-      when(fileRepoMock.getFileNames()).thenReturn(List.of("two.txt"));
-      when(fileRepoMock.openFile("two.txt")).thenReturn(Stream.of("one","two"));
+      fileRepoFake.addFile("two.txt", List.of("one","two"));
       assertThat(feedProcessor.countPendingLines()).isEqualTo(2);
    }
 
    @Test
    public void twoFilesWith3Lines() {
-      when(fileRepoMock.getFileNames()).thenReturn(List.of("one.txt","two.txt"));
-      when(fileRepoMock.openFile("one.txt")).thenReturn(Stream.of("one"));
-      when(fileRepoMock.openFile("two.txt")).thenReturn(Stream.of("one","two"));
+      fileRepoFake.addFile("one.txt", List.of("one"));
+      fileRepoFake.addFile("two.txt", List.of("one","two"));
       assertThat(feedProcessor.countPendingLines()).isEqualTo(3);
    }
 
    @Test
    public void doesNotCountHashedLines() {
-      when(fileRepoMock.getFileNames()).thenReturn(List.of("one.txt"));
-      when(fileRepoMock.openFile("one.txt")).thenReturn(Stream.of("#one"));
+      fileRepoFake.addFile("one.txt", List.of("#one"));
       assertThat(feedProcessor.countPendingLines()).isEqualTo(0);
    }
-
-   // TODO IMAGINE EXTRA DEPENDENCY
 }
