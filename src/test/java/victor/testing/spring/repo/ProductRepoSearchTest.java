@@ -34,6 +34,10 @@ public class ProductRepoSearchTest {
     public ProductRepoSearchTest() {
         System.out.println("New test class instance");
     }
+    @BeforeEach
+    public void initialize() {
+        assertThat(repo.count()).isEqualTo(0); // good idea for larger projects
+    }
     @Test
     public void noCriteria() {
         repo.save(new Product());
