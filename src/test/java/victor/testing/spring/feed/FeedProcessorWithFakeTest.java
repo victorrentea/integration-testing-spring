@@ -25,10 +25,10 @@ public class FeedProcessorWithFakeTest {
    @Autowired
    private FileRepoFake fileRepoFake;
 
-//   @BeforeEach
-//   public void cleanup() {
-//      fileRepoFake.clearFiles();
-//   }
+   @BeforeEach
+   public void cleanup() {
+      fileRepoFake.clearFiles();
+   }
 
    @Test
    public void oneFileWithOneLine() {
@@ -37,7 +37,7 @@ public class FeedProcessorWithFakeTest {
    }
 
    @Test
-   @DirtiesContext(methodMode = MethodMode.BEFORE_METHOD)
+//   @DirtiesContext(methodMode = MethodMode.BEFORE_METHOD)
    public void oneFileWith2Lines() {
       fileRepoFake.addFile("two.txt", List.of("one","two"));
       assertThat(feedProcessor.countPendingLines()).isEqualTo(2);
