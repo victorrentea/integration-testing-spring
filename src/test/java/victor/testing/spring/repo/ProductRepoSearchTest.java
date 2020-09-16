@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,6 +46,7 @@ public class ProductRepoSearchTest {
     }
 
     @Test
+//    @Commit // for letting the Test Tx commit so that you can debug it after
     public void byNameMatch() {
         criteria.name = "Am";
         repo.save(new Product().setName("naMe"));
