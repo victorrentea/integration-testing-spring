@@ -29,15 +29,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest
 public class ProductFacadeClientMockTest {
-   @Mock
+   @MockBean
    public SafetyClient mockSafetyClient;
-   @Mock
+   @MockBean
    private ProductRepo productRepo;
-   @Mock
+   @MockBean
    private SupplierRepo supplierRepo;
-   @InjectMocks
+   @Autowired
    private ProductFacade productFacade;
 
    @Test
