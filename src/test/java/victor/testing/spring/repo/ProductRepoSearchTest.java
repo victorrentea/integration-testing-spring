@@ -20,10 +20,7 @@ import victor.testing.spring.facade.ProductSearchCriteria;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Transactional
 @SpringBootTest
-@ActiveProfiles("db-h2")
-@Sql(scripts = "classpath:/supplier.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
 //@Tag("integration")
 //@ContextConfiguration(initializers = WaitForDatabase.class)
 public class ProductRepoSearchTest {
@@ -76,9 +73,5 @@ public class ProductRepoSearchTest {
         assertThat(repo.search(criteria)).isEmpty();
     }
 
-
-    // TODO base test class persisting supplier
-
-    // TODO replace with composition
 }
 

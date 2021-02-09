@@ -2,6 +2,7 @@ package victor.testing.spring.repo;
 
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import victor.testing.spring.domain.Supplier;
 
@@ -14,8 +15,7 @@ public class CommonDataExtension implements BeforeEachCallback {
 
     @Override
     public void beforeEach(ExtensionContext context) throws Exception {
-        SupplierRepo repo = SpringExtension.getApplicationContext(context).getBean(SupplierRepo.class);
-        System.out.println("******** Insert Common data via entity manager: " + repo);
-        repo.save(supplier);
+        ApplicationContext spring = SpringExtension.getApplicationContext(context);
+        // TODO
     }
 }

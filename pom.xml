@@ -117,6 +117,7 @@
                     <excludedGroups>integration</excludedGroups>
                 </configuration>
             </plugin>
+
             <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <configuration>

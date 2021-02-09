@@ -82,7 +82,6 @@ public class ProductFacadeClientWireMockTest {
    }
 
    @Test
-   @SneakyThrows
    public void throwsForUnsafeProductProgrammaticWireMockFromFileTemplatized() {
       Assertions.assertThrows(IllegalStateException.class, () -> {
          String template;
