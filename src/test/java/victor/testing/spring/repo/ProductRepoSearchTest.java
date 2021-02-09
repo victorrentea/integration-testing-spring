@@ -10,6 +10,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import org.springframework.transaction.annotation.Transactional;
 import victor.testing.spring.WaitForDatabase;
 import victor.testing.spring.domain.Product;
@@ -20,9 +22,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Transactional
 @SpringBootTest
-@ActiveProfiles("db-mysql")
-@Tag("integration")
-@ContextConfiguration(initializers = WaitForDatabase.class)
+@ActiveProfiles("db-h2")
+@Sql(scripts = "classpath:/supplier.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+//@Tag("integration")
+//@ContextConfiguration(initializers = WaitForDatabase.class)
 public class ProductRepoSearchTest {
     @Autowired
     private ProductRepo repo;

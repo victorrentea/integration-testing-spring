@@ -1,38 +1,30 @@
 package victor.testing.spring.domain;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Entity
-//@Data NEVER
-@ToString
+@Data
 public class Product {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Getter
+    @Setter(AccessLevel.NONE)
     private Long id;
 
-    @Getter @Setter
     private String name;
 
-    @Getter @Setter
     private ProductCategory category;
 
-    @Getter @Setter
     private String upc;
 
-    @Getter @Setter
     @ManyToOne
     private Supplier supplier;
 
-    @Getter @Setter
     private LocalDateTime createDate;
+
     public Product(String name, String upc, ProductCategory category) {
         this.name = name;
         this.upc = upc;
@@ -44,10 +36,5 @@ public class Product {
     }
 
     public Product() {}
-
-
-    public Long getId() {
-        return id;
-    }
 
 }

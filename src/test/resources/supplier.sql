@@ -1,0 +1,1 @@
+insert into supplier(ACTIVE, NAME) VALUES ( -1,'SUP1');
