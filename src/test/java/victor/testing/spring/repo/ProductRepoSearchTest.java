@@ -19,58 +19,48 @@ import victor.testing.spring.domain.Supplier;
 import victor.testing.spring.facade.ProductSearchCriteria;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
-//@Tag("integration")
-//@ContextConfiguration(initializers = WaitForDatabase.class)
+@Tag("integration")
 public class ProductRepoSearchTest {
     @Autowired
     private ProductRepo repo;
 
     private ProductSearchCriteria criteria = new ProductSearchCriteria();
 
-    @RegisterExtension
-    public CommonDataExtension commonData = new CommonDataExtension();
-
     public ProductRepoSearchTest() {
         System.out.println("New test class instance");
-    }
-    @BeforeEach
-    public void initialize() {
-        assertThat(repo.count()).isEqualTo(0); // good idea for larger projects
     }
     @Test
     public void noCriteria() {
         repo.save(new Product());
         assertThat(repo.search(criteria)).hasSize(1);
     }
-
     @Test
-//    @Commit // for letting the Test Tx commit so that you can debug it after
+    public void noCriteriaBis() {
+        repo.save(new Product());
+        assertThat(repo.search(criteria)).hasSize(1);
+        assertEquals(1, repo.search(criteria).size());
+    }
+
+//    @Test
     public void byNameMatch() {
-        criteria.name = "Am";
-        repo.save(new Product().setName("naMe"));
-        assertThat(repo.search(criteria)).hasSize(1);
+        // TODO
     }
-    @Test
+//    @Test
     public void byNameNoMatch() {
-        criteria.name = "nameXX";
-        repo.save(new Product().setName("name"));
-        assertThat(repo.search(criteria)).isEmpty();
+        // TODO
     }
 
-    @Test
+//    @Test
     public void bySupplierMatch() {
-        repo.save(new Product().setSupplier(commonData.getSupplier()));
-        criteria.supplierId = commonData.getSupplier().getId();
-        assertThat(repo.search(criteria)).hasSize(1);
+        // TODO
     }
 
-    @Test
+//    @Test
     public void bySupplierNoMatch() {
-        repo.save(new Product().setSupplier(commonData.getSupplier()));
-        criteria.supplierId = -1L;
-        assertThat(repo.search(criteria)).isEmpty();
+        // TODO
     }
 
 }

@@ -19,19 +19,18 @@ public class SafetyClient {
     @Value("${safety.service.url.base}")
     private URL baseUrl;
 
-    @Cacheable("safety-cache")
     public boolean isSafe(String upc) {
         var response = rest.getForEntity(
             baseUrl.toString() + "/product/{upc}/safety",
             SafetyReportDto.class, upc);
 
         boolean safe = response.getBody().getEntries().stream().anyMatch(this::entryIsSafe);
-        log.info("Product is safe: " + safe);
+        log.info("Got answer from remote API: Product {} is safe = {} ", upc, safe);
         return safe;
     }
 
     private boolean entryIsSafe(SafetyEntryDto report) {
-        return "SAFE".equals(report.getCategory()); // BUG FIXED
+        return "SAFE".equals(report.getCategory());
 
     }
 }

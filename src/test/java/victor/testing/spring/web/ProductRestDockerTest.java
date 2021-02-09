@@ -33,31 +33,30 @@ public class ProductRestDockerTest {
    @RegisterExtension
    public WireMockExtension wireMockExtension = new WireMockExtension(8089);
 
-   private RestTemplate rest;
+   private RestTemplate rest = new RestTemplate();
 
    @BeforeEach
    public void initialize() {
-      rest = new RestTemplate();
       rest.setUriTemplateHandler(new DefaultUriBuilderFactory("http://localhost:8080"));
    }
 
    @Test
-   public void testSearch() {
+   public void testSearchBLACK() {
       long supplierId = 1L; // assumed to exist in DB - @see victor.testing.spring.DummyDataCreator
       log.info("Start");
 
-      var productDto = new ProductDto("Tree", "SAFE", supplierId, ProductCategory.ME);
-      var createResult = rest.postForEntity("/product/create", productDto, Void.class);
-      assertEquals(HttpStatus.OK, createResult.getStatusCode());
+      ProductDto productDto = new ProductDto("Tree", "SAFE", supplierId, ProductCategory.ME);
+      ResponseEntity<Void> createResult = rest.postForEntity("/product/create", productDto, Void.class);
+      assertThat(createResult.getStatusCode()).isEqualTo(HttpStatus.OK);
       log.info("Created OK");
 
-      var searchCriteria = new ProductSearchCriteria("Tree", null, null);
+      ProductSearchCriteria searchCriteria = new ProductSearchCriteria("Tree", null, null);
       ResponseEntity<List<ProductSearchResult>> searchResponse = rest.exchange(
           "/product/search", HttpMethod.POST,
           new HttpEntity<>(searchCriteria), new ParameterizedTypeReference<>() {
           });
 
-      assertEquals(HttpStatus.OK, searchResponse.getStatusCode());
+      assertThat(createResult.getStatusCode()).isEqualTo(HttpStatus.OK);
       assertThat(searchResponse.getBody()).allMatch(p -> "Tree".equals(p.getName()));
       log.info("Search OK");
    }

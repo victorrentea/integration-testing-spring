@@ -24,6 +24,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+// Transactional doesn't work as the thread is swapped
 public class ProductRestTest {
    @MockBean
    private SafetyClient safetyClient;
@@ -33,7 +34,7 @@ public class ProductRestTest {
    private ProductRepo productRepo;
 
    @Autowired
-   private TestRestTemplate rest; // vs RestTemplate + base URL + .withBasicAuth("spring", "secret")
+   private TestRestTemplate rest;
 //   private RestTemplate rest;
 
 //   @Autowired
@@ -65,8 +66,7 @@ public class ProductRestTest {
           });
 
       assertEquals(HttpStatus.OK, searchResponse.getStatusCode());
-      assertThat(searchResponse.getBody()).hasSize(1);
-      assertThat(searchResponse.getBody()).allMatch(p -> "Tree".equals(p.getName()));
+      assertThat(searchResponse.getBody().stream().map(ProductSearchResult::getName)).containsExactly("Tree");
    }
 
 

@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -19,6 +20,7 @@ import victor.testing.spring.domain.Supplier;
 import victor.testing.spring.infra.SafetyClient;
 import victor.testing.spring.repo.ProductRepo;
 import victor.testing.spring.repo.SupplierRepo;
+import victor.testing.spring.tools.WireMockExtension;
 import victor.testing.spring.web.ProductDto;
 
 import java.time.Clock;
@@ -29,11 +31,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
+@SpringBootTest // (properties = "safety.service.url.base=http://localhost:8090")
 @ActiveProfiles("db-mem")
-public class ProductFacadeClientMockTest {
-   @MockBean
-   public SafetyClient mockSafetyClient;
+public class ProductFacadeTest {
    @Autowired
    private ProductRepo productRepo;
    @Autowired
@@ -42,17 +42,8 @@ public class ProductFacadeClientMockTest {
    private ProductFacade productFacade;
 
    @Test
-   public void throwsForUnsafeProduct() {
-      Assertions.assertThrows(IllegalStateException.class, () -> {
-         when(mockSafetyClient.isSafe("upc")).thenReturn(false);
-         productFacade.createProduct(new ProductDto("name", "upc",-1L, ProductCategory.HOME));
-      });
-   }
-
-   @Test
    public void fullOk() {
       long supplierId = supplierRepo.save(new Supplier()).getId();
-      when(mockSafetyClient.isSafe("upc")).thenReturn(true);
 
       ProductDto dto = new ProductDto("name", "upc", supplierId, ProductCategory.HOME);
       productFacade.createProduct(dto);
@@ -63,14 +54,5 @@ public class ProductFacadeClientMockTest {
       assertThat(product.getUpc()).isEqualTo("upc");
       assertThat(product.getSupplier().getId()).isEqualTo(supplierId);
       assertThat(product.getCategory()).isEqualTo(ProductCategory.HOME);
-      assertThat(product.getCreateDate()).isNotNull();
    }
-
-
-   // TODO Fixed Time
-   // @TestConfiguration public static class ClockConfig {  @Bean  @Primary  public Clock fixedClock() {}}
-
-   // TODO Variable Time
-   // when(clock.instant()).thenAnswer(call -> currentTime.toInstant(ZoneId.systemDefault().getRules().getOffset(currentTime)));
-   // when(clock.getZone()).thenReturn(ZoneId.systemDefault());
 }

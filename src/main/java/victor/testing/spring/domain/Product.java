@@ -23,8 +23,6 @@ public class Product {
     @ManyToOne
     private Supplier supplier;
 
-    private LocalDateTime createDate;
-
     public Product(String name, String upc, ProductCategory category) {
         this.name = name;
         this.upc = upc;
