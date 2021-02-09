@@ -14,7 +14,7 @@ import java.util.Optional;
 public class Product {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Getter
     private Long id;
 

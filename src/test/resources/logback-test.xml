@@ -13,7 +13,7 @@
     <logger name="wiremock.org" level="WARN"/>
     <logger name="WireMock" level="INFO"/>
 
-    <root level="debug">
+    <root level="info">
         <appender-ref ref="CONSOLE"/>
     </root>
 
