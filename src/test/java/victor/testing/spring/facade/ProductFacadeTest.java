@@ -55,4 +55,8 @@ public class ProductFacadeTest {
       assertThat(product.getSupplier().getId()).isEqualTo(supplierId);
       assertThat(product.getCategory()).isEqualTo(ProductCategory.HOME);
    }
+
+   // Facade Tests
+   //   > WireMock Real Safety app: 8090 ,  WireMock: 8089, Recorder: 8080
+   //   > @Cacheable - Clear @BeforeEach via CacheManager
 }

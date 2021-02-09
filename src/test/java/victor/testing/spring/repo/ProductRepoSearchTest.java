@@ -42,6 +42,23 @@ public class ProductRepoSearchTest {
         assertThat(repo.search(criteria)).hasSize(1);
         assertEquals(1, repo.search(criteria).size());
     }
+    //Tests talking to a Database
+    //- Profiles for DB connection details
+    //- Test Interdependencies:
+    //  > Assert initially empty
+    //  > @DirtiesContext
+    //  > Manual Cleanup / @Sql
+    //- @Transactional tests
+    //  > p6spy
+    //  > nested transactions
+    //- Insert Static Data
+    //  > test/resources/data.sql (non-tx)
+    //  > @Sql
+    //  > JPA: inherit fixture
+    //  > JPA: compose fixture (JUnit5)
+    //  > ActiveProfile insertDummyData
+    //- Cucumber integration
+    //- Run on dockerized DB: @Tag @ContextConfiguration
 
 //    @Test
     public void byNameMatch() {

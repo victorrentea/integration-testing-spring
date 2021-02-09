@@ -59,6 +59,15 @@ public class ProductMvcTest {
     }
 
 
+    // REST calls
+    //- MockMvc Test
+    //   > MockBean
+    //   > WireMock
+    //   > @Transactional !
+    //   > Black Box Test
+    //> RestTemplate Test - Tomcat UP
+    //   > Dockerized App Test
+
 
     // MockMvc EMULATES a HTTP call, w/o Tomcat, w/o any HTTP Worker Thread Pool,
     // I'm running the COntroller in the same thread as the test
