@@ -26,11 +26,9 @@ public class ProductRepoSearchTest {
     @Autowired
     private ProductRepo repo;
 
+    // gets reinstantiated for each @Test as the test class is always a fresh one
     private ProductSearchCriteria criteria = new ProductSearchCriteria();
 
-    public ProductRepoSearchTest() {
-        System.out.println("New test class instance");
-    }
     @Test
     public void noCriteria() {
         repo.save(new Product());
@@ -42,7 +40,6 @@ public class ProductRepoSearchTest {
         assertEquals(1, repo.search(criteria).size()); // bad
         assertThat(repo.search(criteria)).hasSize(1);
     }
-    //Tests talking to a Database
     //- Profiles for DB connection details
     //- Test Interdependencies:
     //  > Assert initially empty
@@ -52,11 +49,11 @@ public class ProductRepoSearchTest {
     //  > p6spy
     //  > nested transactions
     //- Insert Static Data
-    //  > test/resources/data.sql (non-tx)
-    //  > @Sql
     //  > JPA: inherit fixture
     //  > JPA: compose fixture (JUnit5)
     //  > ActiveProfile insertDummyData
+    //  > test/resources/data.sql (non-tx)
+    //  > @Sql
     //- Cucumber integration
     //- Run on dockerized DB: @Tag @ContextConfiguration
 
