@@ -39,8 +39,8 @@ public class ProductRepoSearchTest {
     @Test
     public void noCriteriaBis() {
         repo.save(new Product());
+        assertEquals(1, repo.search(criteria).size()); // bad
         assertThat(repo.search(criteria)).hasSize(1);
-        assertEquals(1, repo.search(criteria).size());
     }
     //Tests talking to a Database
     //- Profiles for DB connection details
