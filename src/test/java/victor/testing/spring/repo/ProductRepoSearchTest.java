@@ -31,12 +31,12 @@ public class ProductRepoSearchTest {
 
     @Test
     public void noCriteria() {
-        repo.save(new Product());
+        repo.save(new Product("A"));
         assertThat(repo.search(criteria)).hasSize(1);
     }
     @Test
     public void noCriteriaBis() {
-        repo.save(new Product());
+        repo.save(new Product("B"));
         assertEquals(1, repo.search(criteria).size()); // bad
         assertThat(repo.search(criteria)).hasSize(1);
     }
