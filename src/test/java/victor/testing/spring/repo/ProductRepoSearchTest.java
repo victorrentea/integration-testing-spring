@@ -43,16 +43,17 @@ public class ProductRepoSearchTest {
     //- Profiles for DB connection details
     //- Test Interdependencies:
     //  > Assert initially empty
+    //  > Manual Cleanup
+    //  + @Test supplierId - run in middle
+    //  > @Sql
     //  > @DirtiesContext
-    //  > Manual Cleanup / @Sql
     //- @Transactional tests
     //  > p6spy
     //  > nested transactions
-    //- Insert Static Data
+    //- Insert Static Data: USER
     //  > JPA: inherit fixture
     //  > JPA: compose fixture (JUnit5)
     //  > ActiveProfile insertDummyData
-    //  > test/resources/data.sql (non-tx)
     //  > @Sql
     //- Cucumber integration
     //- Run on dockerized DB: @Tag @ContextConfiguration
