@@ -16,7 +16,7 @@ public class DummyDataCreator implements CommandLineRunner {
 
    @Override
    public void run(String... args) throws Exception {
-      jdbcTemplate.update("INSERT INTO supplier(ID, NAME, ACTIVE) VALUES (1, 'Dummy', 1)");
+      jdbcTemplate.update("INSERT INTO USER(ID, USERNAME) VALUES (1, 'user')");
 
       log.info("Inserted dummy data");
 
