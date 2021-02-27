@@ -8,6 +8,8 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Commit;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
@@ -21,14 +23,26 @@ import victor.testing.spring.facade.ProductSearchCriteria;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@ActiveProfiles("db-h2")
 @SpringBootTest
+@Transactional
+//@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
+//@Sql(scripts = "classpath:/clear-data.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
 public class ProductRepoSearchTest {
     @Autowired
     private ProductRepo repo;
+    @Autowired
+    private SupplierRepo supplierRepo;
 
     // gets reinstantiated for each @Test as the test class is always a fresh one
     private ProductSearchCriteria criteria = new ProductSearchCriteria();
 
+    @BeforeEach
+    public final void before() {
+//        assertThat(repo.findAll()).isEmpty(); // useful for real-world large project
+//        repo.deleteAll();
+//        supplierRepo.deleteAll();app
+    }
     @Test
     public void noCriteria() {
         repo.save(new Product("A"));
@@ -37,8 +51,18 @@ public class ProductRepoSearchTest {
     @Test
     public void noCriteriaBis() {
         repo.save(new Product("B"));
-        assertEquals(1, repo.search(criteria).size()); // bad
         assertThat(repo.search(criteria)).hasSize(1);
+    }
+    @Test
+    public void byASupplier() {
+        Supplier supplier = new Supplier("Sup");
+        repo.save(new Product("B").setSupplier(supplier));
+
+        criteria.supplierId = supplier.getId();
+        assertThat(repo.search(criteria)).hasSize(1);
+
+        criteria.supplierId = -1L;
+        assertThat(repo.search(criteria)).isEmpty();
     }
     //- Profiles for DB connection details
     //- Test Interdependencies:

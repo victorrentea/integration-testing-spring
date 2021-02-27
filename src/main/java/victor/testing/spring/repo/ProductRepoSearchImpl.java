@@ -1,7 +1,12 @@
 package victor.testing.spring.repo;
 
+import cucumber.api.Transpose;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import victor.testing.spring.domain.Product;
 import victor.testing.spring.facade.ProductSearchResult;
 import victor.testing.spring.facade.ProductSearchCriteria;
 import wiremock.org.apache.commons.lang3.StringUtils;
@@ -22,13 +27,14 @@ public class ProductRepoSearchImpl implements ProductRepoSearch {
     public List<ProductSearchResult> search(ProductSearchCriteria criteria) {
         String jpql = "SELECT new victor.testing.spring.facade.ProductSearchResult(p.id, p.name)" +
                 " FROM Product p " +
-                " WHERE 1=1 ";
+                " WHERE 1=1 "; // "1=1"
 
         Map<String, Object> paramMap = new HashMap<>();
 
         if (StringUtils.isNotEmpty(criteria.name)) {
             jpql += "  AND UPPER(p.name) LIKE UPPER('%' || :name || '%')   ";
             paramMap.put("name", criteria.name);
+            // Criteria, Criteria+metamodel, QueryDSL, Specification
         }
         if (criteria.supplierId != null) {
             jpql += "  AND p.supplier.id = :supplierId   ";
@@ -43,6 +49,22 @@ public class ProductRepoSearchImpl implements ProductRepoSearch {
         for (String paramName : paramMap.keySet()) {
             query.setParameter(paramName, paramMap.get(paramName));
         }
-        return query.getResultList();
+        List<ProductSearchResult> result = query.getResultList();
+
+//        other.method();
+
+        return result;
+    }
+    private final  Other other;
+}
+@Service
+@RequiredArgsConstructor
+
+class Other {
+    private final EntityManager em;
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void method() {
+        em.persist(new Product("By mistake"));
     }
 }
