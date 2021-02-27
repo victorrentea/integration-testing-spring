@@ -58,5 +58,4 @@ public class ProductFacadeTest {
 
    // Facade Tests
    //   > WireMock Real Safety app: 8090 ,  WireMock: 8089, Recorder: 8080
-   //   > @Cacheable - Clear @BeforeEach via CacheManager
 }
