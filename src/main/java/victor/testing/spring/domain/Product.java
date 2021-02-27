@@ -23,6 +23,9 @@ public class Product {
     @ManyToOne
     private Supplier supplier;
 
+    @ManyToOne
+    private User createdBy;
+
     public Product(String name, String upc, ProductCategory category) {
         this.name = name;
         this.upc = upc;
@@ -31,6 +34,15 @@ public class Product {
 
     public Product(String name) {
         this.name = name;
+    }
+
+    public Product setCreatedBy(User createdBy) {
+        this.createdBy = createdBy;
+        return this;
+    }
+
+    public User getCreatedBy() {
+        return createdBy;
     }
 
     public Product() {}

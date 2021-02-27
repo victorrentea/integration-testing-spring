@@ -5,12 +5,13 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import victor.testing.spring.domain.Supplier;
+import victor.testing.spring.domain.User;
 
 public class CommonDataExtension implements BeforeEachCallback {
-    private final Supplier supplier = new Supplier();
+    private final User user = new User();
 
-    public Supplier getSupplier() {
-        return supplier;
+    public User getUser() {
+        return user;
     }
 
     @Override
