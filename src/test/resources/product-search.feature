@@ -1,4 +1,4 @@
-@txn
+@txn # Runs each Scenario or Example in its own @Transactional
 Feature: Search for product
 
   Background:
@@ -27,7 +27,7 @@ Feature: Search for product
 
     Examples:
       | productName | productCategory | productSupplier | searchName | searchCategory | searchSupplier | returned |
-      | a           | KIDS            |                 | a          | ME             |                | false     |
-      | a           | KIDS            |                 | a          | KIDS           |                | true     |
       | aX          |                 |                 | a          |                |                | true     |
       | aX          |                 |                 | aY         |                |                | false    |
+#  TODO search by category
+#    TODO search by supplier
