@@ -23,6 +23,7 @@ import victor.testing.spring.repo.SupplierRepo;
 import victor.testing.spring.tools.WireMockExtension;
 import victor.testing.spring.web.ProductDto;
 
+import javax.annotation.RegEx;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -32,7 +33,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest // (properties = "safety.service.url.base=http://localhost:8090")
+@SpringBootTest(properties = "safety.service.url.base=http://localhost:8099")
 @Transactional
 @ActiveProfiles("db-mem")
 public class ProductFacadeTest {
@@ -43,12 +44,15 @@ public class ProductFacadeTest {
    @Autowired
    private ProductFacade productFacade;
 
-   @MockBean
-   private SafetyClient safetyClient;
+   @RegisterExtension
+   public WireMockExtension wireMock = new WireMockExtension(8099);
+
+//   @MockBean
+//   private SafetyClient safetyClient;
 
    @Test
    public void fullOk() {
-      when(safetyClient.isSafe("upc")).thenReturn(true);
+//      when(safetyClient.isSafe("upc")).thenReturn(true);
       long supplierId = supplierRepo.save(new Supplier()).getId();
 
       ProductDto dto = new ProductDto("name", "upc", supplierId, ProductCategory.HOME);
