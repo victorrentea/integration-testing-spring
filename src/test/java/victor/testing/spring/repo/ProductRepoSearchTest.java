@@ -18,17 +18,20 @@ import org.springframework.transaction.annotation.Transactional;
 import victor.testing.spring.WaitForDatabase;
 import victor.testing.spring.domain.Product;
 import victor.testing.spring.domain.Supplier;
+import victor.testing.spring.domain.User;
 import victor.testing.spring.facade.ProductSearchCriteria;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@ActiveProfiles("db-h2")
+@ActiveProfiles("db-mysql")
+@Tag("integration")
+@ContextConfiguration(initializers = WaitForDatabase.class)
 @SpringBootTest
 @Transactional
 //@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 //@Sql(scripts = "classpath:/clear-data.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
-public class ProductRepoSearchTest {
+public class ProductRepoSearchTest /*extends RepoTestBase */{
     @Autowired
     private ProductRepo repo;
     @Autowired
@@ -36,6 +39,10 @@ public class ProductRepoSearchTest {
 
     // gets reinstantiated for each @Test as the test class is always a fresh one
     private ProductSearchCriteria criteria = new ProductSearchCriteria();
+
+    @RegisterExtension
+    public CommonDataExtension data = new CommonDataExtension();
+
 
     @BeforeEach
     public final void before() {
@@ -56,7 +63,7 @@ public class ProductRepoSearchTest {
     @Test
     public void byASupplier() {
         Supplier supplier = new Supplier("Sup");
-        repo.save(new Product("B").setSupplier(supplier));
+        repo.save(new Product("B").setSupplier(supplier).setCreatedBy(data.getUser()));
 
         criteria.supplierId = supplier.getId();
         assertThat(repo.search(criteria)).hasSize(1);

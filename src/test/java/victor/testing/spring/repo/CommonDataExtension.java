@@ -17,6 +17,8 @@ public class CommonDataExtension implements BeforeEachCallback {
     @Override
     public void beforeEach(ExtensionContext context) throws Exception {
         ApplicationContext spring = SpringExtension.getApplicationContext(context);
+        UserRepo userRepo = spring.getBean(UserRepo.class);
+        userRepo.save(user);
         // TODO
     }
 }

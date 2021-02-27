@@ -32,6 +32,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest // (properties = "safety.service.url.base=http://localhost:8090")
+@Transactional
 @ActiveProfiles("db-mem")
 public class ProductFacadeTest {
    @Autowired
