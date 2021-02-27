@@ -53,7 +53,7 @@ public class ProductRepoSearchTest {
     //- Insert Static Data: USER
     //  > JPA: inherit fixture
     //  > JPA: compose fixture (JUnit5)
-    //  > ActiveProfile insertDummyData
+    //  > ActiveProfile insertDummyData << show case only
     //  > @Sql
     //- Cucumber integration
     //- Run on dockerized DB: @Tag @ContextConfiguration
