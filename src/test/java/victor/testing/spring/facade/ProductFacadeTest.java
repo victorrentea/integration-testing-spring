@@ -28,6 +28,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -42,8 +43,12 @@ public class ProductFacadeTest {
    @Autowired
    private ProductFacade productFacade;
 
+   @MockBean
+   private SafetyClient safetyClient;
+
    @Test
    public void fullOk() {
+      when(safetyClient.isSafe("upc")).thenReturn(true);
       long supplierId = supplierRepo.save(new Supplier()).getId();
 
       ProductDto dto = new ProductDto("name", "upc", supplierId, ProductCategory.HOME);
