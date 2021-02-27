@@ -58,24 +58,5 @@ public class ProductRepoSearchTest {
     //- Cucumber integration
     //- Run on dockerized DB: @Tag @ContextConfiguration
 
-//    @Test
-    public void byNameMatch() {
-        // TODO
-    }
-//    @Test
-    public void byNameNoMatch() {
-        // TODO
-    }
-
-//    @Test
-    public void bySupplierMatch() {
-        // TODO
-    }
-
-//    @Test
-    public void bySupplierNoMatch() {
-        // TODO
-    }
-
 }
 
